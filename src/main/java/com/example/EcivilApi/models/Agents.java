@@ -1,4 +1,12 @@
 package com.example.EcivilApi.models;
 
-public class Agents {
+
+import jakarta.persistence.Entity;
+import lombok.Data;
+
+@Entity
+@Data
+public class Agents extends Utilisateurs {
+    private String matricule;
+
 }

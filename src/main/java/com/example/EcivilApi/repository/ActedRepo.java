@@ -1,4 +1,7 @@
 package com.example.EcivilApi.repository;
 
-public interface ActedRepo {
+import com.example.EcivilApi.models.ActeD;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ActedRepo extends JpaRepository<ActeD,Long> {
 }
