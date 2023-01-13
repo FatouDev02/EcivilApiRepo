@@ -19,7 +19,7 @@ public interface UtilisateurService {
 
     List<Utilisateurs> getAll();
 
-    List<Utilisateurs> RetrouverParRole(Role role);
+   // List<Utilisateurs> RetrouverParRole(Role role);
 
     Long TotalUsers();
 

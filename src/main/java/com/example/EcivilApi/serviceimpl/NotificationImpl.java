@@ -4,9 +4,10 @@ import com.example.EcivilApi.models.Notification;
 import com.example.EcivilApi.repository.NotificationRepository;
 import com.example.EcivilApi.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class NotificationImpl implements NotificationService {
     @Autowired
     NotificationRepository notificationRepo;

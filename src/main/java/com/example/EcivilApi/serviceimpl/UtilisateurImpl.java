@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Slf4j
+@Service
 public class UtilisateurImpl implements UtilisateurService {
 
     @Autowired
@@ -83,11 +85,11 @@ public class UtilisateurImpl implements UtilisateurService {
 
 
 
-    @Override
+  /*  @Override
     public List<Utilisateurs> RetrouverParRole(Role role) {
         // TODO Auto-generated method stub
         return repos.findByRole(role);
-    }
+    }*/
 
     @Override
     public Long TotalUsers() {
