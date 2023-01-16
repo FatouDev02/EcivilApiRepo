@@ -1,7 +1,7 @@
 package com.example.EcivilApi.models;
-
-import jakarta.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
 
 
 @Entity
@@ -11,6 +11,7 @@ public class Commissariats {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
     private String nom;
     private String longitude;
     private String latitude;
@@ -18,5 +19,7 @@ public class Commissariats {
     @ManyToOne
     @JoinColumn(name = "typestructure")
     private Structure typestructure;
+
+
 
 }

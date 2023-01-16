@@ -1,7 +1,7 @@
 package com.example.EcivilApi.models;
-
-import jakarta.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -18,5 +18,7 @@ public class Tribunal {
     @ManyToOne
     @JoinColumn(name = "typestructure")
     private Structure typestructure;
+
+
 
 }

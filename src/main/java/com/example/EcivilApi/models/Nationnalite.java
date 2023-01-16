@@ -1,7 +1,8 @@
 package com.example.EcivilApi.models;
 
-import jakarta.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -16,4 +17,6 @@ public class Nationnalite {
     private String photoacten;
     @ManyToOne
     private Demande mademande;
+
+
 }

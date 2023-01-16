@@ -1,17 +1,19 @@
 package com.example.EcivilApi.models;
 
 
-import jakarta.persistence.*;
 import lombok.Data;
 
-@Entity
+import javax.persistence.*;
+
 @Data
+@Entity
 public class Acten {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    private String nomh;
+
+    private String nom;
     private String prenom;
     private String nompere;
     private String nommere;
@@ -23,4 +25,6 @@ public class Acten {
 
     @ManyToOne
     private Demande mademande;
+
+
 }

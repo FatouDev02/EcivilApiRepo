@@ -1,8 +1,9 @@
 package com.example.EcivilApi.models;
 
 
-import jakarta.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -24,6 +25,8 @@ public class Actem {
     private String datemariage;
     @ManyToOne
     private Demande mademande;
+
+
 
 
 }

@@ -1,9 +1,9 @@
 package com.example.EcivilApi.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.Data;
 
+import javax.persistence.*;
 import java.util.Date;
 
 

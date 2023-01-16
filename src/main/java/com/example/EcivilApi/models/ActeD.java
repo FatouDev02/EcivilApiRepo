@@ -1,8 +1,9 @@
 package com.example.EcivilApi.models;
 
 
-import jakarta.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -22,6 +23,8 @@ public class ActeD {
     private String lieudeces;
 @ManyToOne
     private Demande mademande;
+
+
 
 
 }

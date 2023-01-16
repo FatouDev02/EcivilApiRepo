@@ -13,6 +13,8 @@ import java.util.List;
 public interface UtilisateurRepository extends JpaRepository<Utilisateurs,Long> {
     Utilisateurs findByEmail(String email);
     Utilisateurs findByUsername(String username);
+    Boolean existsByUsername(String username);
+    Boolean existsByEmail(String email);
 
     Utilisateurs findByUsernameAndPassword(String username, String password);
 

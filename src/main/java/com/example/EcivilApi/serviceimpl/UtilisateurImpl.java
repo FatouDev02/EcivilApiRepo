@@ -29,7 +29,7 @@ public class UtilisateurImpl implements UtilisateurService {
 
     @Override
     public Utilisateurs creer(Utilisateurs utilisateur) {
-        log.info("Ajout d'un collaborateur {} ", utilisateur.getUsername());
+        log.info("Ajout de l'utilisateur  {} ", utilisateur.getUsername());
         //a l'enregistrement on recupère le passwor et le l'encode
 
         // TODO Auto-generated method stub

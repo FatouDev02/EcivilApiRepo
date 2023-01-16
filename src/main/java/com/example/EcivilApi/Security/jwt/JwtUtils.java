@@ -2,17 +2,17 @@ package com.example.EcivilApi.Security.jwt;
 
 import com.example.EcivilApi.Security.services.UserDetailsImpl;
 import com.example.EcivilApi.models.Utilisateurs;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+import io.jsonwebtoken.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
-import java.security.SignatureException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 @Component
 public class JwtUtils {
@@ -31,20 +31,18 @@ public class JwtUtils {
     @Value("${bezkoder.app.jwtRefreshCookieName}")
     private String jwtRefreshCookie;
 
-    /*public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
+    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
-        return generateCookie(jwtCookie, jwt, "/ApiTourist");
+        return generateCookie(jwtCookie, jwt, "/ecivil");
     }
 
     public ResponseCookie generateJwtCookie(Utilisateurs user) {
         String jwt = generateTokenFromUsername(user.getUsername());
-        return generateCookie(jwtCookie, jwt, "/ApiTourist");
-    }*/
-
-
+        return generateCookie(jwtCookie, jwt, "/ecivil");
+    }
 
     public ResponseCookie generateRefreshJwtCookie(String refreshToken) {
-        return generateCookie(jwtRefreshCookie, refreshToken, "/ApiTourist/user/refreshtoken");
+        return generateCookie(jwtRefreshCookie, refreshToken, "/ecivil/user/refreshtoken");
     }
 
     public String getJwtFromCookies(HttpServletRequest request) {
@@ -56,15 +54,15 @@ public class JwtUtils {
     }
 
     public ResponseCookie getCleanJwtCookie() {
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/ApiTourist").build();
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/ecivil").build();
         return cookie;
     }
 
     public ResponseCookie getCleanJwtRefreshCookie() {
-        ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie, null).path("/ApiTourist/user/refreshtoken").build();
+        ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie, null).path("/ecivil/user/refreshtoken").build();
         return cookie;
     }
-/*
+
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
@@ -95,7 +93,7 @@ public class JwtUtils {
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
-    }*/
+    }
 
     private ResponseCookie generateCookie(String name, String value, String path) {
         ResponseCookie cookie = ResponseCookie.from(name, value).path(path).maxAge(24 * 60 * 60).httpOnly(true).build();

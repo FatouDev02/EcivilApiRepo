@@ -1,8 +1,9 @@
 package com.example.EcivilApi.models;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 
 @Data
@@ -18,6 +19,8 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private ERole name;
+
+
 
 
 }

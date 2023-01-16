@@ -7,12 +7,12 @@ import java.util.List;
 public interface Demandeservice {
     // Création
     Demande creerdemande(Demande demande);
-    Acten creeracten(Acten acten);
-    Actem creeractem(Actem actem);
-    ActeD creeracted(ActeD acteD);
-    CasierJudiciaire creercasier(CasierJudiciaire casierJudiciaire);
-    Residence creerresidence(Residence residence);
-    Nationnalite creernationlt(Nationnalite nationnalite);
+    Object creeracten(Acten acten,String numvolet);
+    Object creeractem(Actem actem);
+    Object creeracted(ActeD acteD);
+    Object creercasier(CasierJudiciaire casierJudiciaire);
+    Object creerresidence(Residence residence);
+    Object creernationlt(Nationnalite nationnalite);
 
 
 

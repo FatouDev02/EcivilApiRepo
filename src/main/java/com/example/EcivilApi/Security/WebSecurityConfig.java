@@ -6,7 +6,6 @@ import com.example.EcivilApi.Security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -39,12 +38,12 @@ public class WebSecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
-
         return authProvider;
+
     }
 
 
@@ -52,6 +51,8 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
+
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -61,20 +62,20 @@ public class WebSecurityConfig {
 
 
 
-   /* @Bean
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/ApiTourist/user/signin").permitAll()
-                .antMatchers("/ApiTourist/user/signup","/ApiTourist/pays/**","/ApiTourist/activite/**","/ApiTourist/region/**","/ApiTourist/population/**").permitAll()
+                .authorizeRequests().antMatchers("/ecivil/user/signin").permitAll()
+                .antMatchers("/ecivil/user/signup","/ecivil/user/signout","/ecivil/acten/**").permitAll()
                 .anyRequest().authenticated();
-
 
         http.authenticationProvider(authenticationProvider());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }*/
+    }
+
 }

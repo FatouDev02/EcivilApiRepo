@@ -1,8 +1,7 @@
 package com.example.EcivilApi.models;
-
-
-import jakarta.persistence.Entity;
 import lombok.Data;
+
+import javax.persistence.Entity;
 
 @Entity
 @Data
