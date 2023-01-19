@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 @Service
 public class DemandeImpl  implements Demandeservice {
@@ -23,9 +24,27 @@ public class DemandeImpl  implements Demandeservice {
     NationnaliteRepo nationnaliteRepo;
     @Autowired
     Residncerepo residncerepo;
+    @Autowired
+    DemandeRepository demandeRepository;
+    @Autowired
+    StructureRepository structureRepository;
+    @Autowired
+    Typestructrepo typestructrepo;
     @Override
-    public Demande creerdemande(Demande demande) {
-        return null;
+    public Object creerdemande(Demande demande,Long idtypestruct) {
+        /*if (demandeRepository.findByType(type) !=null){
+            return ResponseMessage.generateResponse("error", HttpStatus.OK, " numvolet existe deja !");
+
+        }else{
+            demande.setType(type);
+            return demandeRepository.save(demande);
+
+        }*/
+        Typestructure typestructure=typestructrepo.findById(idtypestruct).get();
+        demande.setTypestructure(typestructure);
+        demande.setDatededeclaration(new Date());
+        return demandeRepository.save(demande);
+
     }
 
 //////////////////////Création des types de demandes//////////////////////////////////
@@ -142,7 +161,7 @@ public class DemandeImpl  implements Demandeservice {
 
     @Override
     public Demande GetByid(Long id) {
-        return null;
+        return demandeRepository.findById(id).get();
     }
 
     @Override
@@ -173,5 +192,17 @@ public class DemandeImpl  implements Demandeservice {
     @Override
     public Nationnalite GetNationnaliteById(Long id) {
         return null;
+    }
+
+    @Override
+    public String attribuerstruct(long iddem, long idstruct) {
+        Demande mademande=demandeRepository.findById(iddem).orElse(null);
+        Structure mastructure=structureRepository.findById(idstruct).orElse(null);
+        if (mastructure != null) {
+            mademande.setStructure(mastructure);
+            demandeRepository.save(mademande);
+            return "Demande attribuée avec succès !";
+        } else
+            return "Cette Structure n'existe pas !";
     }
 }

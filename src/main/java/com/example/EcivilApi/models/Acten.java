@@ -26,5 +26,9 @@ public class Acten {
     @ManyToOne
     private Demande mademande;
 
+/*
+    @ManyToOne
+    private Typestructure typestructure;*/
+
 
 }

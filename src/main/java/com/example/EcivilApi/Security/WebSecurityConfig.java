@@ -68,7 +68,9 @@ public class WebSecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/ecivil/user/signin").permitAll()
-                .antMatchers("/ecivil/user/signup","/ecivil/user/signout","/ecivil/acten/**").permitAll()
+                .antMatchers("/ecivil/user/signup","/ecivil/user/signout",
+                        "/ecivil/struct/**",
+                        "/ecivil/acten/**").permitAll()
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());

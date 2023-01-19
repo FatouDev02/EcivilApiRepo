@@ -6,8 +6,11 @@ import java.util.List;
 
 public interface Demandeservice {
     // Création
-    Demande creerdemande(Demande demande);
-    Object creeracten(Acten acten,String numvolet);
+   // Object creerdemande(Demande demande,String type);
+
+    Object creerdemande(Demande demande,Long idtypestruct);
+
+    Object creeracten(Acten acten, String numvolet);
     Object creeractem(Actem actem);
     Object creeracted(ActeD acteD);
     Object creercasier(CasierJudiciaire casierJudiciaire);
@@ -41,6 +44,7 @@ public interface Demandeservice {
     CasierJudiciaire GetCasierById(Long id);
     Residence GetResidenceById(Long id);
     Nationnalite GetNationnaliteById(Long id);
+    String attribuerstruct(long iddem, long idstruct);
 
 
 
