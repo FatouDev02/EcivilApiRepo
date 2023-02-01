@@ -17,11 +17,11 @@ public interface Demandeservice {
     Object creerresidence(Residence residence);
     Object creernationlt(Nationnalite nationnalite);
 
-
+    Acten valider(Long idPostulant);
 
     // Mise à jour
     Demande update(Long id, Utilisateurs personne);
-    Acten updateacten(Long id,Acten acten);
+    Object updateacten(Long id,Acten acten);
     Actem updateactem(Long id,Actem actem);
     ActeD updateacted(Long id,ActeD acteD);
     CasierJudiciaire updatecasier(Long id,CasierJudiciaire casierJudiciaire);
@@ -45,6 +45,7 @@ public interface Demandeservice {
     Residence GetResidenceById(Long id);
     Nationnalite GetNationnaliteById(Long id);
     String attribuerstruct(long iddem, long idstruct);
+    Demande findbytype(String type);
 
 
 

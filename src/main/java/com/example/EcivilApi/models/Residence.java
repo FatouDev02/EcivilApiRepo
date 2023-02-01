@@ -1,4 +1,5 @@
 package com.example.EcivilApi.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,7 +16,14 @@ public class Residence {
     private String prenom;
     private String photoacten;
     private String lieuderesidence;
+    @JsonIgnore
     @ManyToOne
     private Demande mademande;
+
+    @ManyToOne
+    private Structure mastructure;
+
+    @ManyToOne
+    private Utilisateurs user;
 
 }

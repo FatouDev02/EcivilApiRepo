@@ -25,7 +25,12 @@ public class Notification {
     private  String description;
     private  String titre;
     private Date datenotif;
-
-    @OneToOne
+@OneToOne
+    @JoinColumn(name = "iddemande", referencedColumnName = "id")
     private Demande demande;
+     /*   @ManyToOne
+    @JoinColumn(name = "acten_id")
+    private Acten acten;*/
+
+
 }

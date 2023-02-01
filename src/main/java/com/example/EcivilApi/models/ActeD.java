@@ -1,6 +1,7 @@
 package com.example.EcivilApi.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,8 +22,15 @@ public class ActeD {
     private String numvolet;
     private String lieunaiss;
     private String lieudeces;
-@ManyToOne
+    @JsonIgnore
+    @ManyToOne
     private Demande mademande;
+
+    @ManyToOne
+    private Structure mastructure;
+
+    @ManyToOne
+    private Utilisateurs user;
 
 
 

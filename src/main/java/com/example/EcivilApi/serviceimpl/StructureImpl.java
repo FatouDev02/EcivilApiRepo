@@ -84,6 +84,16 @@ public class StructureImpl implements StructureService {
     }
 
     @Override
+    public Typestructure getbytype(String type) {
+        return typestructrepo.findByType(type);
+    }
+
+    @Override
+    public void deletestruct(long id) {
+        structureRepository.deleteById(id);
+    }
+
+    @Override
     public List<Structure> structbytype() {
         return null;
     }

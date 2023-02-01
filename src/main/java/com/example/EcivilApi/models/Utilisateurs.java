@@ -23,26 +23,27 @@ public  class Utilisateurs {
     private String email;
     private String password;
     private String username;
-    private Genre genre;
+    private String genre;
     private String tel;
+    private String lieuuderesidence;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "utilisateur_roles",
             joinColumns = @JoinColumn(name = "utilisateur_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles= new HashSet<>();
 
-    public Utilisateurs(String nom, String prenom, String email, String username, Genre genre, String tel, String  password) {
-        this.id = id;
+    public Utilisateurs( String nom, String prenom, String email,  String username, String genre, String tel, String lieuuderesidence,String password) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
-        this.password = password;
         this.username = username;
         this.genre = genre;
         this.tel = tel;
-    }
+        this.lieuuderesidence = lieuuderesidence;
+        this.password = password;
 
+    }
 
     public Long getId() {
         return id;
@@ -92,11 +93,11 @@ public  class Utilisateurs {
         this.username = username;
     }
 
-    public Genre getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(Genre genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 

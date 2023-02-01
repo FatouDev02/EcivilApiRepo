@@ -69,6 +69,7 @@ public class WebSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/ecivil/user/signin").permitAll()
                 .antMatchers("/ecivil/user/signup","/ecivil/user/signout",
+                        "/ecivil/user/**",
                         "/ecivil/struct/**",
                         "/ecivil/acten/**").permitAll()
                 .anyRequest().authenticated();

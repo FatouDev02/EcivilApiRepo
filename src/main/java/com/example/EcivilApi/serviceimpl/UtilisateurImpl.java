@@ -1,5 +1,6 @@
 package com.example.EcivilApi.serviceimpl;
 
+import com.example.EcivilApi.models.ERole;
 import com.example.EcivilApi.models.Role;
 import com.example.EcivilApi.models.Utilisateurs;
 import com.example.EcivilApi.repository.Rolerepository;
@@ -13,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class UtilisateurImpl implements UtilisateurService {
@@ -43,9 +46,14 @@ public class UtilisateurImpl implements UtilisateurService {
         return rolerepository.save(role);
     }
 
+    @Override
+    public Optional<Role> getrole(ERole name) {
+        return rolerepository.findByName(name);
+    }
+
 
     @Override
-    public Utilisateurs update(Utilisateurs utilisateur) {
+    public Object update(Long id,Utilisateurs utilisateur) {
         // TODO Auto-generated method stub
         Utilisateurs user = this.getById(utilisateur.getId());
         System.out.println(user.getPassword());
@@ -62,6 +70,7 @@ public class UtilisateurImpl implements UtilisateurService {
             utilisateur.setPassword(passwordEncoder().encode(utilisateur.getPassword()));
 
         }
+        utilisateur.setId(id);
         return repos.save(utilisateur);
     }
 
@@ -69,6 +78,11 @@ public class UtilisateurImpl implements UtilisateurService {
     public void delete(Long id) {
         // TODO Auto-generated method stub
         repos.deleteById(id);
+    }
+
+    @Override
+    public Utilisateurs getByEmail(String email) {
+        return repos.findByEmail(email);
     }
 
     @Override

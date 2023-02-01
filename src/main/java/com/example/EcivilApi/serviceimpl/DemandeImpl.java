@@ -63,10 +63,12 @@ public class DemandeImpl  implements Demandeservice {
     @Override
     public Object creeractem(Actem actem) {
         return actemRepo.save(actem);
+
     }
 
     @Override
     public Object creeracted(ActeD acteD) {
+
         return actedRepo.save(acteD);
     }
 
@@ -85,9 +87,18 @@ public class DemandeImpl  implements Demandeservice {
         return nationnaliteRepo.save(nationnalite);
 
     }
+
+    @Override
+    public Acten valider(Long idPostulant) {
+        return null;
+    }
     //////////////////////Fin  Création des types de demandes//////////////////////////////////
 
-
+/*    public Acten valider(Long id) {
+        Acten acten= actenRepo.findById(id).get();
+        acten.setEtatdemande(true);
+        return actenRepo.save(acten);
+    }*/
 
     @Override
     public Demande update(Long id, Utilisateurs personne) {
@@ -95,8 +106,10 @@ public class DemandeImpl  implements Demandeservice {
     }
 
     @Override
-    public Acten updateacten(Long id, Acten acten) {
-        return null;
+    public Object updateacten(Long id, Acten acten) {
+        acten.setId(id);
+        actenRepo.save(acten);
+        return "dzgu";
     }
 
     @Override
@@ -204,5 +217,10 @@ public class DemandeImpl  implements Demandeservice {
             return "Demande attribuée avec succès !";
         } else
             return "Cette Structure n'existe pas !";
+    }
+
+    @Override
+    public Demande findbytype(String type) {
+        return demandeRepository.findByType(type);
     }
 }

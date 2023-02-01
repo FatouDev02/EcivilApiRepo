@@ -1,9 +1,7 @@
 package com.example.EcivilApi.controller;
 
 
-import com.example.EcivilApi.configuration.ResponseMessage;
 import com.example.EcivilApi.models.Demande;
-import com.example.EcivilApi.models.Mairie;
 import com.example.EcivilApi.models.Structure;
 import com.example.EcivilApi.models.Typestructure;
 import com.example.EcivilApi.repository.DemandeRepository;
@@ -13,12 +11,11 @@ import com.example.EcivilApi.services.StructureService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/ecivil/struct")
@@ -51,15 +48,20 @@ public class StructureController {
         }*/
         structure.setTypestructure(typestructure);
         return structureService.creer(structure);
-
-
     }
+
+
     //Ajouter un type de struct avec type et description
     @PostMapping("/add")
     public Object creertype(
             @RequestParam(value = "structt",required = true) String structt) throws JsonProcessingException {
         Typestructure typestructure1=new JsonMapper().readValue(structt,Typestructure.class);
         return structureService.creertype(typestructure1);
+    }
+    //recuperer un type
+    @GetMapping("/gettype/{typestructure}")
+    public Optional<Typestructure> get(@PathVariable Typestructure typestructure){
+        return this.typestructrepo.findById(typestructure.getId());
     }
     //Structure par type (id)
     @GetMapping("/liststructbytype/{typestructure}")
@@ -101,6 +103,12 @@ public class StructureController {
     }
 
 
+    @DeleteMapping("/delete/{typestructure}/{structure}")
+    public String  del(Typestructure typestructure,Structure structure){
+
+        this.structureService.deletestruct(structure.getId());
+        return "Structure supprimé";
+    }
 
 
     @GetMapping("/listtype")

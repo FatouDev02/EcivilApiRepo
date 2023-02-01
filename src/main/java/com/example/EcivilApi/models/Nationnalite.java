@@ -1,5 +1,6 @@
 package com.example.EcivilApi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,8 +16,15 @@ public class Nationnalite {
     private String nom;
     private String prenom;
     private String photoacten;
+    @JsonIgnore
     @ManyToOne
     private Demande mademande;
+
+    @ManyToOne
+    private Structure mastructure;
+
+    @ManyToOne
+    private Utilisateurs user;
 
 
 }

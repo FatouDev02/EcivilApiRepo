@@ -28,12 +28,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Utilisateurs user=userRepository.findByUsername(username);
         if(user == null){
             //si le coll n'existe pas retouner cette erreur
-            log.error("Collaborateur non trouvé");
+            log.error("Utilisateur  non trouvé");
 
-            throw new UsernameNotFoundException("Collaborateur non trouvé");
+            throw new UsernameNotFoundException("Utilisateur non trouvé");
         } else{
             //sinon sil existe retouner ce messsage
-            log.info("Collaborateur  trouvé",username);
+            log.info("Utilisateur  trouvé",username);
 
         }
         return UserDetailsImpl.build(user);

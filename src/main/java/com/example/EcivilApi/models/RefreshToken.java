@@ -12,7 +12,7 @@ public class RefreshToken {
     private Long id;
 
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private Utilisateurs user;
 

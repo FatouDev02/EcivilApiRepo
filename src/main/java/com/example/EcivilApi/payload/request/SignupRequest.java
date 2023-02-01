@@ -12,12 +12,13 @@ public class SignupRequest {
     private Set<String> role;
     private String nom;
     private String prenom;
-    private Genre genre;
+    private String genre;
     private String tel;
-
+    private  String lieuuderesidence;
    // @NotBlank
    // @Size(min = 6, max = 40)
     private String password;
+
 
     public String getUsername() {
         return username;
@@ -59,11 +60,11 @@ public class SignupRequest {
         this.prenom = prenom;
     }
 
-    public Genre getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(Genre genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 
@@ -74,6 +75,13 @@ public class SignupRequest {
     public void setTel(String tel) {
         this.tel = tel;
     }
+    public String getLieuuderesidence() {
+        return lieuuderesidence;
+    }
+
+    public void setLieuuderesidence(String lieuuderesidence) {
+        this.lieuuderesidence = lieuuderesidence;
+    }
 
     public String getPassword() {
         return password;
@@ -82,4 +90,6 @@ public class SignupRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
 }

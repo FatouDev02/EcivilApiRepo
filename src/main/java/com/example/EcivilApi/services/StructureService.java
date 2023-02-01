@@ -12,7 +12,9 @@ public interface StructureService {
     Object creertype(Typestructure typestructure);
     Object creertrib(Tribunal tribunal,String Nom);
     Object creercomm(Commissariats commissariats,String Nom);
-List<Structure> structbytype();
+    Typestructure getbytype(String type);
+    void deletestruct(long id);
+    List<Structure> structbytype();
 
 
     // Mettre à jour de la structure par sion id

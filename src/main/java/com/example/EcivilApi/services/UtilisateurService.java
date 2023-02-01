@@ -1,19 +1,25 @@
 package com.example.EcivilApi.services;
 
+import com.example.EcivilApi.models.Acten;
+import com.example.EcivilApi.models.ERole;
 import com.example.EcivilApi.models.Role;
 import com.example.EcivilApi.models.Utilisateurs;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UtilisateurService {
 
     Utilisateurs creer(Utilisateurs utilisateur);
 
     Role ajoutrole(Role role);
+    Optional<Role> getrole(ERole name);
 
-    Utilisateurs update(Utilisateurs utilisateur);
+
+    Object update(Long id,Utilisateurs utilisateur);
 
     void delete(Long id);
+    Utilisateurs getByEmail(String email);
 
     Utilisateurs getById(Long id);
 

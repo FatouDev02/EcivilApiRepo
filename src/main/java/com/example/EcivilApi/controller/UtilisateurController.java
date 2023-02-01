@@ -5,16 +5,16 @@ import com.example.EcivilApi.Security.jwt.JwtUtils;
 import com.example.EcivilApi.Security.services.RefreshTokenService;
 import com.example.EcivilApi.Security.services.UserDetailsImpl;
 import com.example.EcivilApi.exception.TokenRefreshException;
-import com.example.EcivilApi.models.ERole;
-import com.example.EcivilApi.models.RefreshToken;
-import com.example.EcivilApi.models.Role;
-import com.example.EcivilApi.models.Utilisateurs;
+import com.example.EcivilApi.models.*;
 import com.example.EcivilApi.payload.request.LoginRequest;
 import com.example.EcivilApi.payload.request.SignupRequest;
 import com.example.EcivilApi.payload.response.MessageResponse;
 import com.example.EcivilApi.payload.response.UserInfoResponse;
 import com.example.EcivilApi.repository.Rolerepository;
 import com.example.EcivilApi.repository.UtilisateurRepository;
+import com.example.EcivilApi.services.UtilisateurService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -46,6 +46,8 @@ public class UtilisateurController {
     @Autowired
     Rolerepository roleRepository;
     @Autowired
+    UtilisateurService utilisateurService;
+    @Autowired
     AuthenticationManager authenticationManager;
 
     @Autowired
@@ -69,11 +71,14 @@ public class UtilisateurController {
         }
 
         // Create new user's account
-            Utilisateurs user = new Utilisateurs(signUpRequest.getNom(),signUpRequest.getPrenom(),
+            Utilisateurs user = new Utilisateurs(
+                    signUpRequest.getNom(),
+                    signUpRequest.getPrenom(),
                     signUpRequest.getEmail(),
-                            signUpRequest.getUsername(),
-                            signUpRequest.getGenre(),
-                            signUpRequest.getTel(),
+                    signUpRequest.getUsername(),
+                    signUpRequest.getGenre(),
+                    signUpRequest.getTel(),
+                    signUpRequest.getLieuuderesidence(),
                     encoder.encode(signUpRequest.getPassword())
                     );
 
@@ -139,6 +144,8 @@ public class UtilisateurController {
                 .body(new UserInfoResponse(userDetails.getId(),
                         userDetails.getUsername(),
                         userDetails.getEmail(),
+                        userDetails.getNom(),
+                        userDetails.getPrenom(),
                         roles));
     }
 
@@ -158,9 +165,84 @@ public class UtilisateurController {
                 .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
                 .body(new MessageResponse("You've been signed out!"));
     }
+    @PutMapping("/update/{id}")
+    public Object update(@RequestParam(value = "user",required = true) String user,@PathVariable Long id) throws JsonProcessingException {
+        Utilisateurs utilisateur1  = new JsonMapper().readValue(user, Utilisateurs.class);
+        return userRepository.findById(id).map(
+                newuser->{
+                    if(utilisateur1.getNom()== null || utilisateur1.getNom().trim().isEmpty() ) {
+                        newuser.setNom(newuser.getNom());
+
+                    }else {
+                        newuser.setNom(utilisateur1.getNom());
+                    }
+                    //////////:
+                    if(utilisateur1.getPrenom()== null || utilisateur1.getPrenom().trim().isEmpty() ) {
+                        newuser.setPrenom(newuser.getPrenom());
+
+                    }else {
+                        newuser.setPrenom(utilisateur1.getPrenom());
+                    }
+                    //////////:
+                    if(utilisateur1.getEmail()== null || utilisateur1.getEmail().trim().isEmpty() ) {
+                        newuser.setEmail(newuser.getEmail());
+
+                    }else {
+                        newuser.setEmail(utilisateur1.getEmail());
+                    }
+                    //////////:
+                    if(utilisateur1.getGenre()== null || utilisateur1.getGenre().trim().isEmpty() ) {
+                        newuser.setGenre(newuser.getGenre());
+
+                    }else {
+                        newuser.setGenre(utilisateur1.getGenre());
+                    }
+                    //////////:
+                    if(utilisateur1.getTel()== null || utilisateur1.getTel().trim().isEmpty() ) {
+                        newuser.setTel(newuser.getTel());
+
+                    }else {
+                        newuser.setTel(utilisateur1.getTel());
+                    }
+                    //////////:
+                    if(utilisateur1.getTel()== null || utilisateur1.getTel().trim().isEmpty() ) {
+                        newuser.setTel(newuser.getTel());
+
+                    }else {
+                        newuser.setTel(utilisateur1.getTel());
+                    }
+                    //////////:
+                    if(utilisateur1.getUsername()== null || utilisateur1.getUsername().trim().isEmpty() ) {
+                        newuser.setUsername(newuser.getUsername());
+
+                    }else {
+                        newuser.setUsername(utilisateur1.getUsername());
+                    }
+                    //////////:
+                    if(utilisateur1.getRoles()== null || utilisateur1.getRoles().isEmpty() ) {
+                        newuser.setRoles(newuser.getRoles());
+
+                    } else {
+                        newuser.setRoles(utilisateur1.getRoles());
+                    }
+                    //////////:
+                    if(utilisateur1.getPassword()== null || utilisateur1.getPassword().trim().isEmpty() ) {
+                        newuser.setPassword(newuser.getPassword());
+
+                    }else {
+                        newuser.setPassword(utilisateur1.getPassword());
+                    }
+                    //////////:
+
+                    return utilisateurService.update(id,newuser);
+
+                }
+        ).orElseThrow( ()-> new RuntimeException("Utilisateur non trouvé"));
+
+    }
 
 
-    @PostMapping("/refreshtoken")
+   /* @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(HttpServletRequest request) {
         String refreshToken = jwtUtils.getJwtRefreshFromCookies(request);
 
@@ -180,6 +262,13 @@ public class UtilisateurController {
         }
 
         return ResponseEntity.badRequest().body(new MessageResponse("Refresh Token is empty!"));
+    }
+    */
+    @DeleteMapping("/delete/{id}")
+    public String  delete(@PathVariable Long id){
+
+       this.utilisateurService.delete(id);
+       return "user supprimé";
     }
 
 
