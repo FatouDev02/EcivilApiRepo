@@ -66,10 +66,16 @@ public class DemandeImpl  implements Demandeservice {
 
     }
 
-    @Override
-    public Object creeracted(ActeD acteD) {
+    public Object creeracted(ActeD acteD,String numvolet) {
+        //si le numvolet existe
+        if (actedRepo.findByNumvolet(numvolet) !=null){
+            return ResponseMessage.generateResponse("error", HttpStatus.OK, " numvolet existe deja !");
 
-        return actedRepo.save(acteD);
+        }else{
+            acteD.setNumvolet(numvolet);
+            return actedRepo.save(acteD);
+        }
+
     }
 
     @Override
@@ -138,8 +144,11 @@ public class DemandeImpl  implements Demandeservice {
     }
 
     @Override
-    public List<Demande> getAll() {
-        return null;
+    public Object getAll() {
+       List<Acten> a= actenRepo.findAll();
+        List<Actem> b= actemRepo.findAll();
+        List<CasierJudiciaire> d= casierRepo.findAll();
+        return "tout";
     }
 
     @Override

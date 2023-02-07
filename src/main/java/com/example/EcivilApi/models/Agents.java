@@ -4,10 +4,12 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "agents")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,6 +20,7 @@ public class Agents extends Utilisateurs {
 
     @ManyToOne
     private Typestructure typestructure;
+
 
     @ManyToOne
     private Structure structure;

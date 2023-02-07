@@ -10,6 +10,7 @@ public class UserInfoResponse {
     private String prenom;
     private List<String> roles;
 
+
     public UserInfoResponse(Long id, String username, String email,String nom,String prenom, List<String> roles) {
         this.id = id;
         this.username = username;

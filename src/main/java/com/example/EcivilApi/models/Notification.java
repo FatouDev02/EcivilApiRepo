@@ -18,13 +18,14 @@ import java.util.Date;
 
 public class Notification {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Lob
     private  String description;
     private  String titre;
     private Date datenotif;
+
 @OneToOne
     @JoinColumn(name = "iddemande", referencedColumnName = "id")
     private Demande demande;

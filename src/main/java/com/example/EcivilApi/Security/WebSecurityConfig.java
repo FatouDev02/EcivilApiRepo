@@ -71,7 +71,10 @@ public class WebSecurityConfig {
                 .antMatchers("/ecivil/user/signup","/ecivil/user/signout",
                         "/ecivil/user/**",
                         "/ecivil/struct/**",
-                        "/ecivil/acten/**").permitAll()
+                        "/ecivil/acten/**",
+                        "/ecivil/actem/**",
+                        "/ecivil/acted/**"
+                ).permitAll()
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());

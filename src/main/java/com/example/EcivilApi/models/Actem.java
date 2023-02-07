@@ -26,6 +26,16 @@ public class Actem {
     private String datemariage;
 
 
+  /*  @JsonIgnore
+    @ManyToOne
+    private Demande mademande;
+
+    @ManyToOne
+    private Structure mastructure;
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private Utilisateurs user;*/
+
     @JsonIgnore
     @ManyToOne
     private Demande mademande;

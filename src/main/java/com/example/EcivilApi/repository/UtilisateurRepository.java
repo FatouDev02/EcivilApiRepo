@@ -1,6 +1,7 @@
 package com.example.EcivilApi.repository;
 
 import com.example.EcivilApi.models.ActeD;
+import com.example.EcivilApi.models.ERole;
 import com.example.EcivilApi.models.Role;
 import com.example.EcivilApi.models.Utilisateurs;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateurs,Long> 
     Utilisateurs findByUsername(String username);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
-
+   // Role findByRole(ERole name);
     Utilisateurs findByUsernameAndPassword(String username, String password);
 
 

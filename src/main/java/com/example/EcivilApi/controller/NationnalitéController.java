@@ -1,10 +1,7 @@
 package com.example.EcivilApi.controller;
 
 import com.example.EcivilApi.configuration.ResponseMessage;
-import com.example.EcivilApi.models.Nationnalite;
-import com.example.EcivilApi.models.Residence;
-import com.example.EcivilApi.models.Structure;
-import com.example.EcivilApi.models.Utilisateurs;
+import com.example.EcivilApi.models.*;
 import com.example.EcivilApi.repository.NationnaliteRepo;
 import com.example.EcivilApi.repository.Residncerepo;
 import com.example.EcivilApi.repository.UtilisateurRepository;
@@ -14,6 +11,8 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -54,5 +53,20 @@ public class NationnalitéController {
 
         }
     }
+
+
+    @GetMapping("/listnat")
+    public List<Nationnalite> listnat(){
+        return  nationnaliteRepo.findAll();
+
+    }
+    @GetMapping("/getacte/{acten}")
+    public Nationnalite getacet(@PathVariable Nationnalite nationnalite){
+        return  nationnaliteRepo.findById(nationnalite.getId()).get();
+
+    }
+
+    ////////////////////////    //////////////////////// valider   ////////////////////////    ////////////////////////
+
 
 }

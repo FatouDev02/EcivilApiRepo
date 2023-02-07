@@ -1,20 +1,24 @@
 package com.example.EcivilApi.serviceimpl;
 
-import com.example.EcivilApi.models.ERole;
-import com.example.EcivilApi.models.Role;
-import com.example.EcivilApi.models.Utilisateurs;
+import com.example.EcivilApi.configuration.EmailConstructor;
+import com.example.EcivilApi.models.*;
+import com.example.EcivilApi.repository.AgentRepo;
 import com.example.EcivilApi.repository.Rolerepository;
 import com.example.EcivilApi.repository.UtilisateurRepository;
 import com.example.EcivilApi.services.UtilisateurService;
+import jdk.jshell.execution.Util;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.loadtime.Agent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -24,6 +28,12 @@ public class UtilisateurImpl implements UtilisateurService {
     UtilisateurRepository repos;
     @Autowired
     Rolerepository rolerepository;
+    @Autowired
+    EmailConstructor emailConstructor;
+    @Autowired
+    JavaMailSender mailSender;
+    @Autowired
+    AgentRepo agentRepo;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -36,8 +46,31 @@ public class UtilisateurImpl implements UtilisateurService {
         //a l'enregistrement on recupère le passwor et le l'encode
 
         // TODO Auto-generated method stub
-        utilisateur.setPassword(passwordEncoder().encode(utilisateur.getPassword()));
-        return repos.save(utilisateur);
+        //utilisateur.setPassword(passwordEncoder().encode(utilisateur.getPassword()));
+        Optional<Role> u=rolerepository.findByName(ERole.Agent);
+        //s'il se connecte en tant qu'agent "vous voulez vous connecter
+        // en tant qu'agentveuiller suivre ce lien pour definir votre strucuture"
+        Utilisateurs find=this.repos.save(utilisateur);
+
+
+        Set<Role>  roleSet=find.getRoles();
+        for (Role role: roleSet){
+            if(role.equals(u.get())){
+                utilisateur.setStatut("Agentnonvalider");
+                //envoies message pour suivre un processs
+                mailSender.send(emailConstructor.constructagent(find));
+                System.out.println("//////////////////////////////////agent");
+            }else {
+//sinon juste un lien pour se connecetr
+                mailSender.send(emailConstructor.constructNewUserEmail(find));
+                System.out.println("//////////////////////////////////userrrr");
+
+            }
+        }
+
+        // on le valider apres avec la methode validerrrrr
+        return find;
+
     }
 
     @Override
@@ -73,6 +106,35 @@ public class UtilisateurImpl implements UtilisateurService {
         utilisateur.setId(id);
         return repos.save(utilisateur);
     }
+
+//methode pour admin
+    @Override
+    public Object validerinscriptionentantquerole(Long id) {
+        Agents a = agentRepo.findById(id).get();
+
+        String mat = a.getNom().substring(0, 1) + a.getPrenom().substring(0, 1)
+                + "@sebenw2022";
+        a.setMatricule(mat);
+        a.setStatut("AgentValider");
+        agentRepo.save(a);
+        mailSender.send(emailConstructor.valideagent(a,a.getStructure()));
+
+
+
+        return a;
+    }
+
+    @Override
+    public Object demandebyagent(Long id,Structure structure) {
+        System.out.println("//////////////////////////////////identifiant"+id);
+        Agents a = agentRepo.findById(id).get();
+        a.setStructure(structure);
+        agentRepo.save(a);
+        //envoies message pour suivre un processs
+        System.out.println("//////////////////////////////////agent");
+        return a;
+    }
+
 
     @Override
     public void delete(Long id) {

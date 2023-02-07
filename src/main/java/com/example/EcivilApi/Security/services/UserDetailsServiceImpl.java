@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("username vide");
         }
         //recupere le collaborateurs par son username
-        Utilisateurs user=userRepository.findByUsername(username);
+        Utilisateurs user = userRepository.findByUsername(username);
         if(user == null){
             //si le coll n'existe pas retouner cette erreur
             log.error("Utilisateur  non trouvé");

@@ -1,9 +1,6 @@
 package com.example.EcivilApi.services;
 
-import com.example.EcivilApi.models.Acten;
-import com.example.EcivilApi.models.ERole;
-import com.example.EcivilApi.models.Role;
-import com.example.EcivilApi.models.Utilisateurs;
+import com.example.EcivilApi.models.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +14,8 @@ public interface UtilisateurService {
 
 
     Object update(Long id,Utilisateurs utilisateur);
+    Object validerinscriptionentantquerole(Long id );
+    Object demandebyagent(Long id,Structure structure);
 
     void delete(Long id);
     Utilisateurs getByEmail(String email);

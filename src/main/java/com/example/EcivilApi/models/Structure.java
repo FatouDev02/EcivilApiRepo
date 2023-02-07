@@ -27,6 +27,9 @@ public class Structure {
     //plsrs struct appartiennent a un type de struct
     @ManyToOne
     private Typestructure typestructure;
+     @JsonIgnore
+    @OneToMany(mappedBy = "structure")
+    private List<Agents> agents = new ArrayList<>();
     /*@JsonIgnore
     @OneToMany
     List<Mairie> mairieList = new ArrayList<>();

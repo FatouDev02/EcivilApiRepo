@@ -12,7 +12,7 @@ public interface Demandeservice {
 
     Object creeracten(Acten acten, String numvolet);
     Object creeractem(Actem actem);
-    Object creeracted(ActeD acteD);
+    Object creeracted(ActeD acteD,String numvolet);
     Object creercasier(CasierJudiciaire casierJudiciaire);
     Object creerresidence(Residence residence);
     Object creernationlt(Nationnalite nationnalite);
@@ -29,7 +29,7 @@ public interface Demandeservice {
     Nationnalite updatenationlt(Long id,Nationnalite nationnalite);
 
     // recuperer l'ensemble des personnes
-    List<Demande> getAll();
+    Object getAll();
     List<Acten> getAllacten();
     List<Actem> getAllactem();
     List<ActeD> getAllacted();

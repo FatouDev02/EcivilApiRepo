@@ -99,6 +99,11 @@ public class StructureImpl implements StructureService {
     }
 
     @Override
+    public Structure findByAgents(Agents agents) {
+        return structureRepository.findByAgents(agents);
+    }
+
+    @Override
     public List<Typestructure> lister() {
         return typestructrepo.findAll();
     }

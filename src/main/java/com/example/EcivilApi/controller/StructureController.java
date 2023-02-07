@@ -1,9 +1,7 @@
 package com.example.EcivilApi.controller;
 
 
-import com.example.EcivilApi.models.Demande;
-import com.example.EcivilApi.models.Structure;
-import com.example.EcivilApi.models.Typestructure;
+import com.example.EcivilApi.models.*;
 import com.example.EcivilApi.repository.DemandeRepository;
 import com.example.EcivilApi.repository.StructureRepository;
 import com.example.EcivilApi.repository.Typestructrepo;
@@ -82,6 +80,27 @@ public class StructureController {
 
         return newstruct;
     }
+    @GetMapping("/liststructbytypebyagent/{typestructure}/{utilisateurs}")
+    public List<Structure> structbytypeparunagent(@PathVariable Typestructure typestructure,
+                                                @PathVariable Utilisateurs utilisateurs){
+        Typestructure find=typestructrepo.findById(typestructure.getId()).get();
+        List<Structure> newstruct=new ArrayList<>();
+        List<Structure> allstruct= structrepository.findAll();
+        for(Structure s: allstruct){
+            try{
+                if(s.getTypestructure().getId().equals(find.getId())){
+                    newstruct.add(s);
+                }
+            }catch (Exception e){
+
+            }
+
+        }
+
+
+        return newstruct;
+    }
+
     //Structure par type (id)
     @GetMapping("/listdemandetypestruc/{typestructure}")
     public List<Demande> demandebytypestruct( @PathVariable Typestructure typestructure){
@@ -110,7 +129,6 @@ public class StructureController {
         return "Structure supprimé";
     }
 
-
     @GetMapping("/listtype")
     public List<Typestructure> l(){
 
@@ -120,6 +138,12 @@ public class StructureController {
     public List<Structure> list(){
 
         return this.structureService.listertypestruct();
+    }
+
+    @GetMapping("/getbyagent/{agents}")
+    public Structure findByAgents(@PathVariable Agents agents){
+        return  structureService.findByAgents(agents);
+
     }
 
 //tout les structures d'un type de struct par id de la strcut principale

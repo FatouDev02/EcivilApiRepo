@@ -49,13 +49,11 @@ public class ActenController {
         notification.setDatenotif(new Date());
         notification.setDescription("efghjklfdsqdfghj");
         Notification notification1= notificationRepository.save(notification);
-        List<Agents> agentsList = (List<Agents>) agentRepository.findByStructure(structure);
+        List<Agents> agentsList =  agentRepository.findByStructure(structure);
 
         for (Agents agents : agentsList){
-            agents.getStructure();
-            //            abonnement.getUtilisateurs().getNotifications().add(notification1);
-            structureRepository.save(agents.getStructure());
-
+            agents.getNotification().add(notification1);
+            agentRepository.save(agents);
         }
 
 
@@ -74,14 +72,14 @@ public class ActenController {
             //acten1.setMademande(demande);
 
             acten1.setMastructure(structure);
+
             acten1.setUser(u);
+
             return demandeservice.creeracten(acten1,numvolet);
 
         }
 
     }
-
-
 
 
 
@@ -173,32 +171,30 @@ public class ActenController {
 
 
     }
+    @GetMapping("/listactenbystruct/{structure}")
+    public  Object  allacten(@PathVariable Structure structure ){
+        return actenRepo.findByMastructure(structure);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @GetMapping("/getdemandebyid/{demande}")
-    public Demande getdem(@PathVariable Demande demande){
-        return  demandeRepository.findById(demande.getId()).get();
+    @GetMapping("/list")
+    public List<Acten> listacten(){
+        return  actenRepo.findAll();
 
     }
+    @GetMapping("/getacte/{acten}")
+    public Acten getacet(@PathVariable Acten acten){
+        return  actenRepo.findById(acten.getId()).get();
+
+    }
+
+    ////////////////////////    //////////////////////// valider   ////////////////////////    ////////////////////////
+
+
+
+
+
+
+
 
 
     @PostMapping("/validerrr/{acten}")
@@ -235,10 +231,6 @@ public class ActenController {
         return  demandeRepository.findAll();
 
     }
-    @GetMapping("/list")
-    public List<Acten> listacten(){
-        return  actenRepo.findAll();
 
-    }
 
 }

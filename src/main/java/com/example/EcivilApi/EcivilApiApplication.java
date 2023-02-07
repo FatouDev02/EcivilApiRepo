@@ -36,13 +36,10 @@ public class EcivilApiApplication {
 				utilisateurService.ajoutrole(new Role(null,Agent));
 				utilisateurService.ajoutrole(new Role(null,ADMIN));
 			}
-
-
-
 			if (utilisateurService.getByEmail("fc@gmail.com")==null)
 			{
 				utilisateurService.creer(new Utilisateurs(null,"fatou","coll","fc@gmail.com",
-						"passss","fcusee","Feminin","000","lieu",new HashSet<>() ));
+						"passss","fcusee","Feminin","000","lieu","agantnonvalider",new HashSet<>() ));
 			/*utilisateurService.creer(new Utilisateurs(null,"fc@gmail.com",
 					"fcpassword","fcusername","00223",new HashSet<>() ));*/
 			}

@@ -15,6 +15,7 @@ public class SignupRequest {
     private String genre;
     private String tel;
     private  String lieuuderesidence;
+    private String statut;
    // @NotBlank
    // @Size(min = 6, max = 40)
     private String password;
@@ -81,6 +82,14 @@ public class SignupRequest {
 
     public void setLieuuderesidence(String lieuuderesidence) {
         this.lieuuderesidence = lieuuderesidence;
+    }
+
+    public String getStatut() {
+        return statut;
+    }
+
+    public void setStatut(String statut) {
+        this.statut = statut;
     }
 
     public String getPassword() {

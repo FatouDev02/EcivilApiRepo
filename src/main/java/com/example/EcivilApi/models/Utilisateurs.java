@@ -11,6 +11,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public  class Utilisateurs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,14 +27,15 @@ public  class Utilisateurs {
     private String genre;
     private String tel;
     private String lieuuderesidence;
+    private String statut;
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
     @JoinTable(name = "utilisateur_roles",
             joinColumns = @JoinColumn(name = "utilisateur_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles= new HashSet<>();
 
-    public Utilisateurs( String nom, String prenom, String email,  String username, String genre, String tel, String lieuuderesidence,String password) {
+    public Utilisateurs( String nom, String prenom, String email,  String username, String genre, String tel, String lieuuderesidence,String statut,String password) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
@@ -42,6 +44,7 @@ public  class Utilisateurs {
         this.tel = tel;
         this.lieuuderesidence = lieuuderesidence;
         this.password = password;
+        this.statut=statut;
 
     }
 
@@ -109,6 +112,22 @@ public  class Utilisateurs {
         this.tel = tel;
     }
 
+    public String getLieuuderesidence() {
+        return lieuuderesidence;
+    }
+
+    public void setLieuuderesidence(String lieuuderesidence) {
+        this.lieuuderesidence = lieuuderesidence;
+    }
+
+    public String getStatut() {
+        return statut;
+    }
+
+    public void setStatut(String statut) {
+        this.statut = statut;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -116,4 +135,5 @@ public  class Utilisateurs {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
 }

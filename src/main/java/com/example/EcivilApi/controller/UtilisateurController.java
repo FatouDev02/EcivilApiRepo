@@ -10,7 +10,9 @@ import com.example.EcivilApi.payload.request.LoginRequest;
 import com.example.EcivilApi.payload.request.SignupRequest;
 import com.example.EcivilApi.payload.response.MessageResponse;
 import com.example.EcivilApi.payload.response.UserInfoResponse;
+import com.example.EcivilApi.repository.AgentRepo;
 import com.example.EcivilApi.repository.Rolerepository;
+import com.example.EcivilApi.repository.StructureRepository;
 import com.example.EcivilApi.repository.UtilisateurRepository;
 import com.example.EcivilApi.services.UtilisateurService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -49,6 +51,10 @@ public class UtilisateurController {
     UtilisateurService utilisateurService;
     @Autowired
     AuthenticationManager authenticationManager;
+    @Autowired
+    StructureRepository structureRepository;
+    @Autowired
+    AgentRepo agentRepo;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -79,8 +85,22 @@ public class UtilisateurController {
                     signUpRequest.getGenre(),
                     signUpRequest.getTel(),
                     signUpRequest.getLieuuderesidence(),
+                    signUpRequest.getStatut(),
                     encoder.encode(signUpRequest.getPassword())
                     );
+        Agents agents = new Agents();
+        agents.setNom(signUpRequest.getNom());
+        agents.setPrenom(signUpRequest.getPrenom());
+        agents.setEmail(signUpRequest.getEmail());
+        agents.setUsername(signUpRequest.getUsername());
+        agents.setLieuuderesidence(signUpRequest.getLieuuderesidence());
+        agents.setGenre(signUpRequest.getGenre());
+        agents.setStatut(signUpRequest.getStatut());
+        agents.setPrenom(signUpRequest.getPrenom());
+        agents.setPassword( encoder.encode(signUpRequest.getPassword()));
+        agents.getRoles().add(roleRepository.findByName(ERole.Agent).get());
+
+
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
@@ -96,33 +116,43 @@ public class UtilisateurController {
                         Role adminRole = roleRepository.findByName(ERole.ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
+                        user.setRoles(roles);
+
+                        utilisateurService.creer(user);
 
                         break;
                     case "agent":
                         Role agentRole = roleRepository.findByName(ERole.Agent)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(agentRole);
-
+                        agentRepo.save(agents);
+                        utilisateurService.creer(agents);
                         break;
                     default:
                         Role userRole = roleRepository.findByName(ERole.USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
+                        user.setRoles(roles);
+                        userRepository.save(user);
+                        utilisateurService.creer(user);
                 }
             });
         }
 
-        user.setRoles(roles);
-        userRepository.save(user);
-
+       //
         return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succcès!"));
     }
 
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        System.out.println("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv vvvvvvvvvvvvvvvvvvvvvvvvvvvvv vvvvvvvvvvvvvvvvvvvv"+ loginRequest.getUsername() + loginRequest.getPassword());
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+
+
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -205,11 +235,11 @@ public class UtilisateurController {
                         newuser.setTel(utilisateur1.getTel());
                     }
                     //////////:
-                    if(utilisateur1.getTel()== null || utilisateur1.getTel().trim().isEmpty() ) {
-                        newuser.setTel(newuser.getTel());
+                    if(utilisateur1.getLieuuderesidence()== null || utilisateur1.getLieuuderesidence().trim().isEmpty() ) {
+                        newuser.setLieuuderesidence(newuser.getLieuuderesidence());
 
                     }else {
-                        newuser.setTel(utilisateur1.getTel());
+                        newuser.setLieuuderesidence(utilisateur1.getLieuuderesidence());
                     }
                     //////////:
                     if(utilisateur1.getUsername()== null || utilisateur1.getUsername().trim().isEmpty() ) {
@@ -242,6 +272,13 @@ public class UtilisateurController {
     }
 
 
+        @PostMapping("/demande/{id}/{structure}")
+        public Object demandeagent(@PathVariable("id") Long id,@PathVariable("structure")Structure structure){
+       // Utilisateurs utilisateur=userRepository.findById(id).get();
+
+                return utilisateurService.demandebyagent(id, structure);
+        }
+
    /* @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(HttpServletRequest request) {
         String refreshToken = jwtUtils.getJwtRefreshFromCookies(request);
@@ -266,10 +303,13 @@ public class UtilisateurController {
     */
     @DeleteMapping("/delete/{id}")
     public String  delete(@PathVariable Long id){
-
        this.utilisateurService.delete(id);
        return "user supprimé";
     }
-
-
+    @PostMapping("/valideragent/{id}")
+    public String  valadtionbyadmin(@PathVariable Long id){
+        Agents a=agentRepo.findById(id).get();
+        utilisateurService.validerinscriptionentantquerole(a.getId());
+        return "Agent valider";
+    }
 }
