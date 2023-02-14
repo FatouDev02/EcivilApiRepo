@@ -16,8 +16,9 @@ public interface StructureService {
     void deletestruct(long id);
     List<Structure> structbytype();
 
-    Structure findByAgents(Agents agents);
 
+    Structure findByAgents(Agents agents);
+Object generateUserPresenceList(Structure structure);
 
     // Mettre à jour de la structure par sion id
     Structure update(Long id, Structure structure);

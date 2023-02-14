@@ -1,5 +1,6 @@
 package com.example.EcivilApi.serviceimpl;
 
+import com.example.EcivilApi.configuration.EmailConstructor;
 import com.example.EcivilApi.configuration.ResponseMessage;
 import com.example.EcivilApi.models.*;
 import com.example.EcivilApi.repository.*;
@@ -7,8 +8,11 @@ import com.example.EcivilApi.services.StructureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 @Service
 @Slf4j
@@ -18,11 +22,13 @@ public class StructureImpl implements StructureService {
     @Autowired
     Mairierepo mairierepo;
     @Autowired
-    Tribrepo tribrepo;
+ActenRepo actenRepo;
     @Autowired
     CommiRepo commiRepo;
-
-
+    @Autowired
+    EmailConstructor emailConstructor;
+    @Autowired
+    JavaMailSender mailSender;
 @Autowired
     Typestructrepo typestructrepo;
 
@@ -101,6 +107,41 @@ public class StructureImpl implements StructureService {
     @Override
     public Structure findByAgents(Agents agents) {
         return structureRepository.findByAgents(agents);
+    }
+
+    @Override
+    @Scheduled(cron = "0 0 8 * * *")
+    public Object generateUserPresenceList(Structure structure) {
+       // users.clear();
+        List<Utilisateurs> users = new ArrayList<>();
+       //  Acten acten=new Acten();
+      //   List<Acten> actenList= new ArrayList<>();
+
+            for(Acten a: actenRepo.findByMastructure(structure)){
+              //  if(u.getId().equals(a.getUser().getId()) ){
+                    users.clear();
+                    users.add(a.getUser());
+                    List<Utilisateurs> utilisateurs2=users;
+                  //  System.out.println("//////////////////////////////////ok");
+                for (Utilisateurs user : utilisateurs2) {
+                    for(int i=0;i<=3;i++) {
+                        // Envoyer un message de bienvenue à l'utilisateur
+                        utilisateurs2.add(user);
+                        i++;
+                        System.out.println("//////////////////////////////////welcome" + i);
+
+
+                    }
+                    return  utilisateurs2; //  mailSender.send(emailConstructor.rdvusers(a.getUser()));
+
+                }
+            }
+
+
+        System.out.println("//////////////////////////////////okkkk");
+
+        return "knlknknnjblknjbkkbjfgjhfhgj";
+
     }
 
     @Override

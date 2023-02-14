@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/ecivil/struct")
-@CrossOrigin(origins = "http://localhost:8100/", maxAge = 3600,allowCredentials="true")
+@CrossOrigin(origins = {"http://localhost:8100/", "http://localhost:8101/"}, maxAge = 3600,allowCredentials="true")
 public class StructureController {
 @Autowired
     StructureService structureService;
@@ -58,8 +58,8 @@ public class StructureController {
     }
     //recuperer un type
     @GetMapping("/gettype/{typestructure}")
-    public Optional<Typestructure> get(@PathVariable Typestructure typestructure){
-        return this.typestructrepo.findById(typestructure.getId());
+    public Typestructure get(@PathVariable Typestructure typestructure){
+        return typestructrepo.findById(typestructure.getId()).get();
     }
     //Structure par type (id)
     @GetMapping("/liststructbytype/{typestructure}")
@@ -129,6 +129,8 @@ public class StructureController {
         return "Structure supprimé";
     }
 
+
+
     @GetMapping("/listtype")
     public List<Typestructure> l(){
 
@@ -138,6 +140,11 @@ public class StructureController {
     public List<Structure> list(){
 
         return this.structureService.listertypestruct();
+    }
+    @GetMapping("/rdv/{structure}")
+    public Object rdv(@PathVariable  Structure structure){
+
+        return structureService.generateUserPresenceList(structure);
     }
 
     @GetMapping("/getbyagent/{agents}")

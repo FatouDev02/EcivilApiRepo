@@ -17,7 +17,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ecivil/acted")
-@CrossOrigin(origins = "http://localhost:8100/", maxAge = 3600,allowCredentials="true")
+
+@CrossOrigin(origins = {"http://localhost:8100/", "http://localhost:8101/"}, maxAge = 3600,allowCredentials="true")
 public class ActedController {
 
 

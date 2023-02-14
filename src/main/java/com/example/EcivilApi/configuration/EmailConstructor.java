@@ -61,6 +61,25 @@ public class EmailConstructor {
 
 		return messagePreparator;
 	}
+	public MimeMessagePreparator rdvusers(Utilisateurs utilisateur) {
+		Context context = new Context();
+		context.setVariable("utilisateur", utilisateur);
+		String text = templateEngine.process("rdvuser.html", context);
+		MimeMessagePreparator messagePreparator = new MimeMessagePreparator() {
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				MimeMessageHelper email = new MimeMessageHelper(mimeMessage);
+				email.setPriority(1);
+				email.setTo(utilisateur.getEmail());
+				email.setSubject("EE E-Sebenw");
+				email.setText(text, true);
+				email.setFrom(new InternetAddress(env.getProperty("support.email")));
+			}
+		};
+
+		return messagePreparator;
+	}
+
 	public MimeMessagePreparator valideagent(Agents utilisateur, Structure structure) {
 		Context context = new Context();
 		context.setVariable("utilisateur", utilisateur);

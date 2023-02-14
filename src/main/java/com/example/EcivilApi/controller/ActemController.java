@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ecivil/actem")
-@CrossOrigin(origins = "http://localhost:8100/", maxAge = 3600,allowCredentials="true")
+@CrossOrigin(origins ={"http://localhost:8100/", "http://localhost:8101/"}, maxAge = 3600,allowCredentials="true")
 public class ActemController {
 
 @Autowired

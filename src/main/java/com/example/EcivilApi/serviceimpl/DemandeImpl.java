@@ -79,18 +79,42 @@ public class DemandeImpl  implements Demandeservice {
     }
 
     @Override
-    public Object creercasier(CasierJudiciaire casierJudiciaire) {
-        return casierRepo.save(casierJudiciaire);
+    public Object creercasier(CasierJudiciaire casierJudiciaire,String lieudenaissance,String nomstruct ) {
+        Structure structure=structureRepository.findByNom(nomstruct);
+        if (!casierJudiciaire.getLieudenaissance().equals(structure.getNom())){
+            return ResponseMessage.generateResponse("error", HttpStatus.OK,
+                    " le lieu de naissance doit correspondre au lieu de la structure !");
+
+        }else{
+            casierJudiciaire.setLieudenaissance(lieudenaissance);
+            return casierRepo.save(casierJudiciaire);
+        }
     }
 
     @Override
-    public Object creerresidence(Residence residence) {
-        return residncerepo.save(residence);
+    public Object creerresidence(Residence residence,String lieuderesidence,String nomstruct ) {
+        Structure structure=structureRepository.findByNom(nomstruct);
+        if (!residence.getLieuderesidence().equals(structure.getNom())){
+            return ResponseMessage.generateResponse("error", HttpStatus.OK,
+                    " le lieu de residence doit correspondre au lieu de la structure !");
+
+        }else{
+            residence.setLieuderesidence(lieuderesidence);
+            return residncerepo.save(residence);
+        }
     }
 
     @Override
-    public Object creernationlt(Nationnalite nationnalite) {
-        return nationnaliteRepo.save(nationnalite);
+    public Object creernationlt(Nationnalite nationnalite,String lieuderesidence,String nomstruct) {
+        Structure structure=structureRepository.findByNom(nomstruct);
+        if (!nationnalite.getLieuderesidence().equals(structure.getNom())){
+            return ResponseMessage.generateResponse("error", HttpStatus.OK,
+                    " le lieu de residence doit correspondre au lieu de la structure !");
+
+        }else{
+            nationnalite.setLieuderesidence(lieuderesidence);
+            return nationnaliteRepo.save(nationnalite);
+        }
 
     }
 

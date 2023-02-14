@@ -1,6 +1,7 @@
 package com.example.EcivilApi.controller;
 
 import com.example.EcivilApi.configuration.ResponseMessage;
+import com.example.EcivilApi.configuration.SaveImage;
 import com.example.EcivilApi.models.*;
 import com.example.EcivilApi.repository.Residncerepo;
 import com.example.EcivilApi.repository.UtilisateurRepository;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,11 +30,17 @@ public class ResidenceController {
     @Autowired
     Demandeservice demandeservice;
 
-    @PostMapping("/add/{resstructure}/{utilisateurs}")
+    @PostMapping("/add/{resstructure}/{utilisateurs}/{lieuderesidence}")
     public Object createresidence(
 
             @RequestParam(value = "residence",required = true) String residence,
-            @PathVariable Structure resstructure, @PathVariable Utilisateurs utilisateurs
+
+            @PathVariable Structure resstructure,
+            @PathVariable Utilisateurs utilisateurs,
+            @PathVariable String lieuderesidence,
+                        @RequestParam(value = "file", required = false) MultipartFile file
+
+
     ) throws JsonProcessingException {
         Residence residence1  =new JsonMapper().readValue(residence,Residence.class);
 
@@ -40,18 +48,29 @@ public class ResidenceController {
         // Acten c = actenRepo.findByNumvolet(numvolet);
         Utilisateurs u=utilisateurRepository.findById(utilisateurs.getId()).get();
         //Demande demande1=demandeRepository.findById(demande.getId()).get();
-        if(u == null){
-            return ResponseMessage.generateResponse("error", HttpStatus.OK, "user problemme");
+        if(file!=null){
+            residence1.setPhotoacten(SaveImage.save("residence",file,residence1.getNom()));
+            if(u == null){
+                return ResponseMessage.generateResponse("error", HttpStatus.OK, "user problemme");
+            }
+            else{
+                residence1.setMastructure(resstructure);
+                residence1.setUser(u);
+                return demandeservice.creerresidence(residence1,lieuderesidence,residence1.getMastructure().getNom());
 
+            }
         }
-        else{
-
-            residence1.setMastructure(resstructure);
-            residence1.setUser(u);
-            return demandeservice.creerresidence(residence1);
-
+        else {
+            return ResponseMessage.generateResponse("error", HttpStatus.OK, "Fichier vide");
         }
+
     }
+
+    @GetMapping("/listresbystruct/{structure}")
+    public  Object  allres(@PathVariable Structure structure ){
+        return residncerepo.findByMastructure(structure);
+    }
+
     @GetMapping("/listres")
     public List<Residence> listresid(){
         return  residncerepo.findAll();

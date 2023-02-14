@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ecivil/casier")
-@CrossOrigin(origins = "http://localhost:8100/", maxAge = 3600,allowCredentials="true")
+@CrossOrigin(origins = {"http://localhost:8100/", "http://localhost:8101/"}, maxAge = 3600,allowCredentials="true")
 public class CasierController {
 
     @Autowired
@@ -30,7 +30,7 @@ public class CasierController {
     Demandeservice demandeservice;
     //a la creation d'un acte de naissance on donne on donne l'id de la demande or une demande est liéé à,un strucure
     //donc acten est liée a la structure dont la demande est liée
-    @PostMapping("/add/{casstructure}/{utilisateurs}")
+    @PostMapping("/add/{casstructure}/{utilisateurs}/{lieudenaissance}")
     public Object createcasier(
 
             @RequestParam(value = "casier",required = true) String casier,
@@ -45,21 +45,20 @@ public class CasierController {
         Utilisateurs u=utilisateurRepository.findById(utilisateurs.getId()).get();
         //Demande demande1=demandeRepository.findById(demande.getId()).get();
         if (file != null){
-            casierJudiciaire1.setPhotoacten(SaveImage.save("Photoacten",file,casierJudiciaire1.getNom()));
+            casierJudiciaire1.setPhotoacten(SaveImage.save("casier",file,casierJudiciaire1.getNom()));
 
             if(u == null){
                 return ResponseMessage.generateResponse("error", HttpStatus.OK, "user problemme");
 
             }
             else{
-
-
                 casierJudiciaire1.setMastructure(casstructure);
                 casierJudiciaire1.setUser(u);
+                System.out.println("/////////////////////////struct:"+ casierJudiciaire1.getMastructure().getNom());
                 //  if (casierJudiciaire1.getLieudenaissance() == utilisateurs.get)
                 //si le lieu de naissance == lieu de la structure recherche de mot clé
-                casierJudiciaire1.setLieudenaissance(lieudenaissance);
-                return demandeservice.creercasier(casierJudiciaire1);
+               // casierJudiciaire1.setLieudenaissance(lieudenaissance);
+                return demandeservice.creercasier(casierJudiciaire1,lieudenaissance,casierJudiciaire1.getMastructure().getNom());
 
             }
         }
@@ -70,6 +69,20 @@ public class CasierController {
 
 
     }
+
+    @GetMapping("/listcasierbystruct/{structure}")
+    public  Object  allcas(@PathVariable Structure structure ){
+
+        return casierRepo.findByMastructure(structure);
+    }
+
+
+
+
+
+
+
+
 
     @GetMapping("/listcas")
     public List<CasierJudiciaire> listcas(){

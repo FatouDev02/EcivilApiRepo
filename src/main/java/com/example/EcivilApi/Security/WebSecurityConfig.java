@@ -73,7 +73,10 @@ public class WebSecurityConfig {
                         "/ecivil/struct/**",
                         "/ecivil/acten/**",
                         "/ecivil/actem/**",
-                        "/ecivil/acted/**"
+                        "/ecivil/acted/**",
+                        "/ecivil/nationnalite/**",
+                        "/ecivil/residence/**",
+                        "/ecivil/casier/**"
                 ).permitAll()
                 .anyRequest().authenticated();
 

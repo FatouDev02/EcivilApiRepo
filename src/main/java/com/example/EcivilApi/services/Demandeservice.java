@@ -13,9 +13,9 @@ public interface Demandeservice {
     Object creeracten(Acten acten, String numvolet);
     Object creeractem(Actem actem);
     Object creeracted(ActeD acteD,String numvolet);
-    Object creercasier(CasierJudiciaire casierJudiciaire);
-    Object creerresidence(Residence residence);
-    Object creernationlt(Nationnalite nationnalite);
+    Object creercasier(CasierJudiciaire casierJudiciaire,String lieudenaissance,String nomstruct);
+    Object creerresidence(Residence residence,String lieuderesidence,String nomstruct);
+    Object creernationlt(Nationnalite nationnalite,String lieuderesidence,String nomstruct);
 
     Acten valider(Long idPostulant);
 

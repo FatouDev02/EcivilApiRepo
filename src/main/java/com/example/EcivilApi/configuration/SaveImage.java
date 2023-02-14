@@ -10,23 +10,23 @@ import java.util.Objects;
 
 public class SaveImage {
 
-    public static String localhost = "http://127.0.0.1/";
-    public static String serveruser = localhost + "erpodk/images/casier/";
-    public static String serveractivite = localhost + "erpodk/images/residence/";
+    public static String localhost = "http://localhost/";
+    public static String servercasier = localhost + "esebenw/images/casier/";
+    public static String serverresidence = localhost + "esebenw/images/residence/";
 
-    public static String Activitelocation = "C:/xampp/htdocs/erpodk/images/casier";
-    public static String Userlocation = "C:/xampp/htdocs/erpodk/images/residence";
+    public static String residencelocation = "/Applications/MAMP/htdocs/esebenw/images/casier";
+    public static String casierlocation = "/Applications/MAMP/htdocs/esebenw/images/residence";
 
     public static String save(String typeImage, MultipartFile file, String nomFichier) {
         String src = "";
         String server = "";
         String location = "";
-        if (typeImage == "user") {
-            location = Userlocation;
-            server = serveruser;
+        if (typeImage == "casier") {
+            location = casierlocation;
+            server = servercasier;
         } else {
-            location = Activitelocation;
-            server = serveractivite;
+            location = residencelocation;
+            server = serverresidence;
 
         }
 
@@ -75,5 +75,4 @@ public class SaveImage {
 
         return src;
     }
-
 }
