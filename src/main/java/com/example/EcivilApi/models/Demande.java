@@ -23,10 +23,10 @@ public class Demande {
     private String name;
     private Date datededeclaration= new Date();
 
-
+/*
     @JsonIgnore
     @OneToOne(mappedBy = "demande", cascade = CascadeType.ALL)
-    private Notification notification;
+    private Notification notification;*/
 
     @ManyToOne
     private Typestructure typestructure;

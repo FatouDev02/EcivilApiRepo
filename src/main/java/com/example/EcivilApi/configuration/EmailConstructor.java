@@ -40,7 +40,6 @@ public class EmailConstructor {
 				email.setFrom(new InternetAddress(env.getProperty("support.email")));
 			}
 		};
-
 		return messagePreparator;
 	}
 	public MimeMessagePreparator constructagent(Utilisateurs utilisateur) {

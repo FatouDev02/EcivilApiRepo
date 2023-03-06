@@ -17,6 +17,7 @@ public class Nationnalite {
     private String prenom;
     private String photoacten;
     private String lieuderesidence;
+    private String etatdemande;
 
     @JsonIgnore
     @ManyToOne

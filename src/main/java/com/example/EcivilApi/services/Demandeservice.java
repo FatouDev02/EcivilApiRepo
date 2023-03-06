@@ -17,7 +17,7 @@ public interface Demandeservice {
     Object creerresidence(Residence residence,String lieuderesidence,String nomstruct);
     Object creernationlt(Nationnalite nationnalite,String lieuderesidence,String nomstruct);
 
-    Acten valider(Long idPostulant);
+    Acten valider(Acten acten );
 
     // Mise à jour
     Demande update(Long id, Utilisateurs personne);

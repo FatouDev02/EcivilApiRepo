@@ -10,15 +10,14 @@ public interface StructureService {
     // Création d'une structure
     Object creer(Structure structure);
     Object creertype(Typestructure typestructure);
-    Object creertrib(Tribunal tribunal,String Nom);
-    Object creercomm(Commissariats commissariats,String Nom);
+
     Typestructure getbytype(String type);
     void deletestruct(long id);
     List<Structure> structbytype();
 
 
     Structure findByAgents(Agents agents);
-Object generateUserPresenceList(Structure structure);
+Object generateUserPresenceList(Structure structure,Long nbre);
 
     // Mettre à jour de la structure par sion id
     Structure update(Long id, Structure structure);

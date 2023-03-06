@@ -119,8 +119,10 @@ public class DemandeImpl  implements Demandeservice {
     }
 
     @Override
-    public Acten valider(Long idPostulant) {
-        return null;
+    public Acten valider(Acten acten) {
+        Acten acten1=this.actenRepo.findById(acten.getId()).get();
+        acten1.setEtatdemande("Valider");
+        return actenRepo.save(acten1);
     }
     //////////////////////Fin  Création des types de demandes//////////////////////////////////
 

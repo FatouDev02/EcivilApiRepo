@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -23,8 +24,9 @@ public class Actem {
     private String temoinf;
     private String datenh;
     private String datenf;
-    private String datemariage;
+    private Date datemariage;
 
+    private String etatdemande;
 
   /*  @JsonIgnore
     @ManyToOne

@@ -22,6 +22,8 @@ public class ActeD {
     private String numvolet;
     private String lieunaiss;
     private String lieudeces;
+    private String etatdemande;
+
     @JsonIgnore
     @ManyToOne
     private Demande mademande;

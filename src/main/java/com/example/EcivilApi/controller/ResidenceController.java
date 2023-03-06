@@ -3,6 +3,8 @@ package com.example.EcivilApi.controller;
 import com.example.EcivilApi.configuration.ResponseMessage;
 import com.example.EcivilApi.configuration.SaveImage;
 import com.example.EcivilApi.models.*;
+import com.example.EcivilApi.repository.AgentRepo;
+import com.example.EcivilApi.repository.NotificationRepository;
 import com.example.EcivilApi.repository.Residncerepo;
 import com.example.EcivilApi.repository.UtilisateurRepository;
 import com.example.EcivilApi.services.Demandeservice;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -24,6 +27,10 @@ public class ResidenceController {
 
     @Autowired
     Residncerepo residncerepo;
+    @Autowired
+    NotificationRepository notificationRepository;
+    @Autowired
+    AgentRepo agentRepository;
 
     @Autowired
     UtilisateurRepository utilisateurRepository;
@@ -47,6 +54,15 @@ public class ResidenceController {
 
         // Acten c = actenRepo.findByNumvolet(numvolet);
         Utilisateurs u=utilisateurRepository.findById(utilisateurs.getId()).get();
+        Notification notification=new Notification();
+        notification.setDatenotif(new Date());
+        notification.setDescription(utilisateurs.getPrenom()+" "+utilisateurs.getNom() +"a fait une demande d'acte de Naissance: " );
+        Notification notification1= notificationRepository.save(notification);
+        List<Agents> agentsList =  agentRepository.findByStructure(resstructure);
+        for (Agents agents : agentsList){
+            agents.getNotification().add(notification1);
+            agentRepository.save(agents);
+        }
         //Demande demande1=demandeRepository.findById(demande.getId()).get();
         if(file!=null){
             residence1.setPhotoacten(SaveImage.save("residence",file,residence1.getNom()));
@@ -71,12 +87,12 @@ public class ResidenceController {
         return residncerepo.findByMastructure(structure);
     }
 
-    @GetMapping("/listres")
-    public List<Residence> listresid(){
-        return  residncerepo.findAll();
+    @GetMapping("/list/{user}")
+    public Object listres( @PathVariable Utilisateurs user){
+        return  residncerepo.findByUser(user);
 
     }
-    @GetMapping("/getacte/{acten}")
+    @GetMapping("/getacte/{residence}")
     public Residence getacet(@PathVariable Residence residence){
         return  residncerepo.findById(residence.getId()).get();
 

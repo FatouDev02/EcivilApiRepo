@@ -2,9 +2,7 @@ package com.example.EcivilApi.controller;
 
 
 import com.example.EcivilApi.models.*;
-import com.example.EcivilApi.repository.DemandeRepository;
-import com.example.EcivilApi.repository.StructureRepository;
-import com.example.EcivilApi.repository.Typestructrepo;
+import com.example.EcivilApi.repository.*;
 import com.example.EcivilApi.services.StructureService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/ecivil/struct")
@@ -27,13 +24,17 @@ public class StructureController {
     Typestructrepo typestructrepo;
 @Autowired
     DemandeRepository demandeRepository;
+@Autowired
+    AgentRepo agentRepo;
+@Autowired
+    UtilisateurRepository utilisateurRepository;
 //Ajouter une struct avec longitude et latitude
     @PostMapping("/add/{typestructure}")
     public Object createstruct(
 
             // @RequestParam(value = "structure",required = true) Structure structure,
 
-            @RequestBody()Structure structure, @PathVariable Typestructure typestructure
+            @RequestParam(value = "structt2",required = true) String structt2, @PathVariable Typestructure typestructure
             ) throws JsonProcessingException {
     /*    if (structrepository.findByType(nom) != null){
             return ResponseMessage.generateResponse("error", HttpStatus.OK, "problemetypestructure");
@@ -44,8 +45,9 @@ public class StructureController {
             return structureService.creer(structure);
 
         }*/
-        structure.setTypestructure(typestructure);
-        return structureService.creer(structure);
+        Structure structure1=new JsonMapper().readValue(structt2,Structure.class);
+        structure1.setTypestructure(typestructure);
+        return structureService.creer(structure1);
     }
 
 
@@ -122,14 +124,57 @@ public class StructureController {
     }
 
 
-    @DeleteMapping("/delete/{typestructure}/{structure}")
-    public String  del(Typestructure typestructure,Structure structure){
+    @DeleteMapping("/delete/{id}")
+    public String  del(@PathVariable Long id){
 
-        this.structureService.deletestruct(structure.getId());
+        structrepository.deleteById(id);
         return "Structure supprimé";
+    }
+    @PutMapping("/update/{id}")
+    public Structure update(@RequestParam(value = "struct",required = true) String struct, @PathVariable Long id) throws  JsonProcessingException{
+        Structure structure1=new JsonMapper().readValue(struct,Structure.class);
+        return structrepository.findById(id).map(
+                newstruct ->{
+                    if(structure1.getNom()== null || structure1.getNom().trim().isEmpty() ) {
+                        newstruct.setNom(newstruct.getNom());
+
+                    }else {
+                        newstruct.setNom(structure1.getNom());
+                    }
+                    /////
+                    if(structure1.getLongitude()== null || structure1.getLongitude().trim().isEmpty() ) {
+                        newstruct.setLongitude(newstruct.getLongitude());
+
+                    }else {
+                        newstruct.setLongitude(structure1.getLongitude());
+                    }
+                    /////
+                    if(structure1.getLatitude()== null || structure1.getLatitude().trim().isEmpty() ) {
+                        newstruct.setLatitude(newstruct.getLatitude());
+
+                    }else {
+                        newstruct.setLatitude(structure1.getLatitude());
+                    }
+
+
+                return structureService.update(id,newstruct);
+            }).orElseThrow(() -> new RuntimeException("Structure non trouvéé"));
+
     }
 
 
+
+
+    //recuperer un agent par id
+    @GetMapping("/getagent/{agents}")
+    public Agents getagent(@PathVariable Agents agents){
+        return agentRepo.findById(agents.getId()).get();
+    }
+
+    @GetMapping("/getuser/{utilisateurs}")
+    public Utilisateurs getaguser(@PathVariable Utilisateurs utilisateurs){
+        return utilisateurRepository.findById(utilisateurs.getId()).get();
+    }
 
     @GetMapping("/listtype")
     public List<Typestructure> l(){
@@ -141,10 +186,10 @@ public class StructureController {
 
         return this.structureService.listertypestruct();
     }
-    @GetMapping("/rdv/{structure}")
-    public Object rdv(@PathVariable  Structure structure){
+    @GetMapping("/rdv/{structure}/{number}")
+    public Object rdv(@PathVariable  Structure structure,@PathVariable Long number){
 
-        return structureService.generateUserPresenceList(structure);
+        return structureService.generateUserPresenceList(structure,number);
     }
 
     @GetMapping("/getbyagent/{agents}")
@@ -153,6 +198,11 @@ public class StructureController {
 
     }
 
+    @GetMapping("/getstruct/{structure}")
+    public Structure findByid(@PathVariable Structure structure){
+        return  structureService.GetById(structure.getId());
+
+    }
 //tout les structures d'un type de struct par id de la strcut principale
    /* @GetMapping("/list/{id}")
     public List<Region> listeparrpays(@PathVariable  Long id){

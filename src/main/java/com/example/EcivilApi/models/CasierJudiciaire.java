@@ -18,6 +18,8 @@ public class CasierJudiciaire {
     private String prenom;
     private String photoacten;
     private String lieudenaissance;
+    private String etatdemande;
+
     @JsonIgnore
     @ManyToOne
     private Demande mademande;

@@ -160,8 +160,6 @@ public class UtilisateurImpl implements UtilisateurService {
         return repos.findAll();
     }
 
-
-
   /*  @Override
     public List<Utilisateurs> RetrouverParRole(Role role) {
         // TODO Auto-generated method stub
@@ -195,4 +193,5 @@ public class UtilisateurImpl implements UtilisateurService {
         // TODO Auto-generated method stub
         return repos.findByUsernameAndPassword(username,password);
     }
+
 }

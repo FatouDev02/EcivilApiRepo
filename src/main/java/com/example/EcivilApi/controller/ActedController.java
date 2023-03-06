@@ -2,9 +2,7 @@ package com.example.EcivilApi.controller;
 
 import com.example.EcivilApi.configuration.ResponseMessage;
 import com.example.EcivilApi.models.*;
-import com.example.EcivilApi.repository.ActedRepo;
-import com.example.EcivilApi.repository.ActemRepo;
-import com.example.EcivilApi.repository.UtilisateurRepository;
+import com.example.EcivilApi.repository.*;
 import com.example.EcivilApi.services.Demandeservice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -12,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -24,6 +23,10 @@ public class ActedController {
 
     @Autowired
     UtilisateurRepository utilisateurRepository;
+    @Autowired
+    NotificationRepository notificationRepository;
+    @Autowired
+    AgentRepo agentRepository;
 
     @Autowired
     ActedRepo actedRepo;
@@ -44,6 +47,15 @@ public class ActedController {
         ActeD c = actedRepo.findByNumvolet(numvolet);
 
         Utilisateurs u=utilisateurRepository.findById(utilisateurs.getId()).get();
+        Notification notification=new Notification();
+        notification.setDatenotif(new Date());
+        notification.setDescription(utilisateurs.getPrenom()+" "+utilisateurs.getNom() +"a fait une demande d'acte de décès: " );
+        Notification notification1= notificationRepository.save(notification);
+        List<Agents> agentsList =  agentRepository.findByStructure(structure);
+        for (Agents agents : agentsList){
+            agents.getNotification().add(notification1);
+            agentRepository.save(agents);
+        }
         //Demande demande1=demandeRepository.findById(demande.getId()).get();
         if (c != null ){
             return ResponseMessage.generateResponse("error", HttpStatus.OK, "problemenumvolet");
@@ -64,14 +76,15 @@ public class ActedController {
         }
 
     }
-    @GetMapping("/list")
-    public List<ActeD> listacted(){
-        return  actedRepo.findAll();
+    @GetMapping("/list/{user}")
+    public Object listacted( @PathVariable Utilisateurs user){
+        return  actedRepo.findByUser(user);
 
     }
+
     @GetMapping("/getacte/{acted}")
-    public ActeD getacet(@PathVariable ActeD acteD){
-        return  actedRepo.findById(acteD.getId()).get();
+    public ActeD getacet(@PathVariable ActeD acted){
+        return  actedRepo.findById(acted.getId()).get();
 
     }
     @GetMapping("/listactedbystruct/{structure}")

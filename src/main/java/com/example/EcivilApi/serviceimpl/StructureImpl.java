@@ -67,28 +67,6 @@ ActenRepo actenRepo;
 
 
 
-    /* @Override
-    public Object creermairie(Mairie mairie,String nom,String typestruct) {
-        //si le numvolet existe
-        if (mairierepo.findByNom(nom) !=null){
-            return ResponseMessage.generateResponse("error", HttpStatus.OK, " nom existant  déja existe deja !");
-
-        }else{
-            mairie.setNom(nom);
-            return mairierepo.save(mairie);
-        }
-    }
-*/
-    @Override
-    public Object creertrib(Tribunal tribunal,String Nom) {
-        return null;
-    }
-
-    @Override
-    public Object creercomm(Commissariats commissariats,String Nom) {
-        return null;
-    }
-
     @Override
     public Typestructure getbytype(String type) {
         return typestructrepo.findByType(type);
@@ -96,6 +74,7 @@ ActenRepo actenRepo;
 
     @Override
     public void deletestruct(long id) {
+
         structureRepository.deleteById(id);
     }
 
@@ -110,37 +89,40 @@ ActenRepo actenRepo;
     }
 
     @Override
-    @Scheduled(cron = "0 0 8 * * *")
-    public Object generateUserPresenceList(Structure structure) {
+   // @Scheduled(cron = "0 0 8 * * *")
+    public Object generateUserPresenceList(Structure structure,Long nbre) {
        // users.clear();
         List<Utilisateurs> users = new ArrayList<>();
        //  Acten acten=new Acten();
       //   List<Acten> actenList= new ArrayList<>();
 
-            for(Acten a: actenRepo.findByMastructure(structure)){
+            for(Acten a: actenRepo.findAllByMastructure(structure)){
               //  if(u.getId().equals(a.getUser().getId()) ){
-                    users.clear();
+                  //  users.clear();
+                if(a.getEtatdemande() != null){
                     users.add(a.getUser());
-                    List<Utilisateurs> utilisateurs2=users;
-                  //  System.out.println("//////////////////////////////////ok");
-                for (Utilisateurs user : utilisateurs2) {
-                    for(int i=0;i<=3;i++) {
-                        // Envoyer un message de bienvenue à l'utilisateur
-                        utilisateurs2.add(user);
-                        i++;
-                        System.out.println("//////////////////////////////////welcome" + i);
-
-
-                    }
-                    return  utilisateurs2; //  mailSender.send(emailConstructor.rdvusers(a.getUser()));
 
                 }
+                System.out.println("//////////////////////////////////ok utilisateurs111111"+users);
+
+
             }
+        List<Utilisateurs> utilisateurs2=new ArrayList<>();
 
 
-        System.out.println("//////////////////////////////////okkkk");
+            for(int i=0; i<nbre;i++) {
+                // Envoyer un message de bienvenue à l'utilisateur
+                utilisateurs2.add(users.get(i));
+                // i++;
+                System.out.println("//////////////////////////////////welcome" + i + users.get(i).getUsername());
 
-        return "knlknknnjblknjbkkbjfgjhfhgj";
+            }
+             //  mailSender.send(emailConstructor.rdvusers(a.getUser()));
+
+
+        return  utilisateurs2;
+
+
 
     }
 
@@ -157,10 +139,12 @@ ActenRepo actenRepo;
 
     @Override
     public Structure update(Long id, Structure structure) {
-        return null;
+        structure.setId(id);
+        return structureRepository.save(structure);
     }
     @Override
     public Structure GetById(Long id) {
         return structureRepository.findById(id).get();
     }
+
 }

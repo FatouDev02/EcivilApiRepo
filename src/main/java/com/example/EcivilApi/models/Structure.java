@@ -28,6 +28,8 @@ public class Structure {
     //plsrs struct appartiennent a un type de struct
     @ManyToOne
     private Typestructure typestructure;
+    @ManyToOne
+    private Commune commune ;
 
 
 

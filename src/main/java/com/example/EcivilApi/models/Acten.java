@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @Entity
@@ -23,7 +25,7 @@ public class Acten {
     private String profpere;
     private String profmere;
     private String numvolet;
-    private String datedenaissance;
+    private Date datedenaissance;
     private String lieudenaissance;
     private String genre;
     private String etatdemande;

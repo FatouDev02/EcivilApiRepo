@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class SaveImage {
 
-    public static String localhost = "http://localhost/";
+    public static String localhost = "/Applications/MAMP/htdocs/esebenw";
     public static String servercasier = localhost + "esebenw/images/casier/";
     public static String serverresidence = localhost + "esebenw/images/residence/";
 

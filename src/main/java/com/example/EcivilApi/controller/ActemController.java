@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.util.Date;
 import java.util.List;
 
@@ -51,10 +53,13 @@ public class ActemController {
             @PathVariable Structure structure, @PathVariable Utilisateurs utilisateurs
     ) throws JsonProcessingException {
         Actem actem1 =new JsonMapper().readValue(actem,Actem.class);
+/*if(ChronoUnit.DAYS.between((Temporal) new Date(), (Temporal) actem1.getDatemariage()) < 15){
+    return ResponseMessage.generateResponse("error", HttpStatus.BAD_REQUEST, "Le mariage doit etre programmé 15 jours envance");
 
+}*/
         Notification notification=new Notification();
         notification.setDatenotif(new Date());
-        notification.setDescription("efghjklfdsqdfghj");
+        notification.setDescription(utilisateurs.getPrenom()+" "+utilisateurs.getNom() +"a fait une demande d'acte de Mariage: " );
          Notification notification1= notificationRepository.save(notification);
         List<Agents> agentsList =  agentRepository.findByStructure(structure);
 
@@ -83,22 +88,23 @@ public class ActemController {
         }
     }
 
-    @GetMapping("/list")
-    public List<Actem> listactem(){
-        return  actemRepo.findAll();
 
-    }
 
     @GetMapping("/getacte/{actem}")
     public Actem getacet(@PathVariable Actem actem){
         return  actemRepo.findById(actem.getId()).get();
 
     }
+
     @GetMapping("/listactembystruct/{structure}")
     public  Object  allactem(@PathVariable Structure structure ){
         return actemRepo.findByMastructure(structure);
     }
+    @GetMapping("/list/{user}")
+    public Object listactem( @PathVariable Utilisateurs user){
+        return  actemRepo.findByUser(user);
 
+    }
     ////////////////////////    //////////////////////// valider   ////////////////////////    ////////////////////////
 
 }

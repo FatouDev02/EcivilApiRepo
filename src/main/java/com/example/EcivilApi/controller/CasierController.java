@@ -3,7 +3,9 @@ package com.example.EcivilApi.controller;
 import com.example.EcivilApi.configuration.ResponseMessage;
 import com.example.EcivilApi.configuration.SaveImage;
 import com.example.EcivilApi.models.*;
+import com.example.EcivilApi.repository.AgentRepo;
 import com.example.EcivilApi.repository.CasierRepo;
+import com.example.EcivilApi.repository.NotificationRepository;
 import com.example.EcivilApi.repository.UtilisateurRepository;
 import com.example.EcivilApi.services.Demandeservice;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -23,6 +26,10 @@ public class CasierController {
 
     @Autowired
     CasierRepo casierRepo;
+    @Autowired
+    NotificationRepository notificationRepository;
+    @Autowired
+    AgentRepo agentRepository;
 
     @Autowired
     UtilisateurRepository utilisateurRepository;
@@ -44,6 +51,15 @@ public class CasierController {
         // Acten c = actenRepo.findByNumvolet(numvolet);
         Utilisateurs u=utilisateurRepository.findById(utilisateurs.getId()).get();
         //Demande demande1=demandeRepository.findById(demande.getId()).get();
+        Notification notification=new Notification();
+        notification.setDatenotif(new Date());
+        notification.setDescription(utilisateurs.getPrenom()+" "+utilisateurs.getNom() +"a fait une demande d'acte de décès: " );
+        Notification notification1= notificationRepository.save(notification);
+        List<Agents> agentsList =  agentRepository.findByStructure(casstructure);
+        for (Agents agents : agentsList){
+            agents.getNotification().add(notification1);
+            agentRepository.save(agents);
+        }
         if (file != null){
             casierJudiciaire1.setPhotoacten(SaveImage.save("casier",file,casierJudiciaire1.getNom()));
 
@@ -83,13 +99,12 @@ public class CasierController {
 
 
 
-
-    @GetMapping("/listcas")
-    public List<CasierJudiciaire> listcas(){
-        return  casierRepo.findAll();
+    @GetMapping("/list/{user}")
+    public Object listcas( @PathVariable Utilisateurs user){
+        return  casierRepo.findByUser(user);
 
     }
-    @GetMapping("/getacte/{casier}")
+    @GetMapping("/getacte/{casierJudiciaire}")
     public CasierJudiciaire getacet(@PathVariable CasierJudiciaire casierJudiciaire){
         return  casierRepo.findById(casierJudiciaire.getId()).get();
 

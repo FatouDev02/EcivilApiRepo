@@ -16,6 +16,8 @@ public class Residence {
     private String prenom;
     private String photoacten;
     private String lieuderesidence;
+    private String etatdemande;
+
     @JsonIgnore
     @ManyToOne
     private Demande mademande;

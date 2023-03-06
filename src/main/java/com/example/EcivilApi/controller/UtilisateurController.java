@@ -4,6 +4,7 @@ package com.example.EcivilApi.controller;
 import com.example.EcivilApi.Security.jwt.JwtUtils;
 import com.example.EcivilApi.Security.services.RefreshTokenService;
 import com.example.EcivilApi.Security.services.UserDetailsImpl;
+import com.example.EcivilApi.configuration.ResponseMessage;
 import com.example.EcivilApi.exception.TokenRefreshException;
 import com.example.EcivilApi.models.*;
 import com.example.EcivilApi.payload.request.LoginRequest;
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -64,16 +67,17 @@ public class UtilisateurController {
     //inscriptionn
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+        System.out.println(signUpRequest.getRole());
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
+                    .body(new MessageResponse("Error: Cet nom d'utilisateur existe déjà!"));
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                    .body(new MessageResponse("Error: Cet Email existe déjà"));
         }
 
         // Create new user's account
@@ -84,7 +88,6 @@ public class UtilisateurController {
                     signUpRequest.getUsername(),
                     signUpRequest.getGenre(),
                     signUpRequest.getTel(),
-                    signUpRequest.getLieuuderesidence(),
                     signUpRequest.getStatut(),
                     encoder.encode(signUpRequest.getPassword())
                     );
@@ -93,7 +96,6 @@ public class UtilisateurController {
         agents.setPrenom(signUpRequest.getPrenom());
         agents.setEmail(signUpRequest.getEmail());
         agents.setUsername(signUpRequest.getUsername());
-        agents.setLieuuderesidence(signUpRequest.getLieuuderesidence());
         agents.setGenre(signUpRequest.getGenre());
         agents.setStatut(signUpRequest.getStatut());
         agents.setPrenom(signUpRequest.getPrenom());
@@ -107,14 +109,14 @@ public class UtilisateurController {
 
         if (strRoles == null) {
             Role userRole = roleRepository.findByName(ERole.USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    .orElseThrow(() -> new RuntimeException("Error: Role Non trouvé."));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "admin":
                         Role adminRole = roleRepository.findByName(ERole.ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                .orElseThrow(() -> new RuntimeException("Error: Role Non trouvé."));
                         roles.add(adminRole);
                         user.setRoles(roles);
 
@@ -123,23 +125,33 @@ public class UtilisateurController {
                         break;
                     case "agent":
                         Role agentRole = roleRepository.findByName(ERole.Agent)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                .orElseThrow(() -> new RuntimeException("Error: Role Non trouvé."));
                         roles.add(agentRole);
+                        user.setRoles(roles);
                         agentRepo.save(agents);
                         utilisateurService.creer(agents);
                         break;
                     default:
                         Role userRole = roleRepository.findByName(ERole.USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                .orElseThrow(() -> new RuntimeException("Error: Role  Non trouvé.."));
                         roles.add(userRole);
                         user.setRoles(roles);
                         userRepository.save(user);
                         utilisateurService.creer(user);
+
                 }
             });
         }
 
-       //
+  /*      Role userRole = roleRepository.findByName(ERole.USER)
+                .orElseThrow(() -> new RuntimeException("Error: Role  Non trouvé.."));
+        roles.add(userRole);
+        user.setRoles(roles);
+        userRepository.save(user);
+        utilisateurService.creer(user);*/
+
+
+        //
         return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succcès!"));
     }
 
@@ -177,6 +189,7 @@ public class UtilisateurController {
                         userDetails.getNom(),
                         userDetails.getPrenom(),
                         roles));
+
     }
 
     @PostMapping("/signout")
@@ -234,13 +247,7 @@ public class UtilisateurController {
                     }else {
                         newuser.setTel(utilisateur1.getTel());
                     }
-                    //////////:
-                    if(utilisateur1.getLieuuderesidence()== null || utilisateur1.getLieuuderesidence().trim().isEmpty() ) {
-                        newuser.setLieuuderesidence(newuser.getLieuuderesidence());
 
-                    }else {
-                        newuser.setLieuuderesidence(utilisateur1.getLieuuderesidence());
-                    }
                     //////////:
                     if(utilisateur1.getUsername()== null || utilisateur1.getUsername().trim().isEmpty() ) {
                         newuser.setUsername(newuser.getUsername());
@@ -273,10 +280,23 @@ public class UtilisateurController {
 
 
         @PostMapping("/demande/{id}/{structure}")
-        public Object demandeagent(@PathVariable("id") Long id,@PathVariable("structure")Structure structure){
+        public Object demandeagent(@PathVariable("id") Long id,
+                                   @PathVariable("structure")Structure structure){
        // Utilisateurs utilisateur=userRepository.findById(id).get();
-
+    /*        Notification notification=new Notification();
+            notification.setDatenotif(new Date());
+            notification.setDescription(utilisateurs.getPrenom()+" "+utilisateurs.getNom() +"a fait une demande d'acte de Naissance: " );
+            Notification notification1= notificationRepository.save(notification);
+            List<Agents> agentsList =  agentRepository.findByStructure(structure);
+            if(acten1.getDatedenaissance().after(new Date())){
+                return ResponseMessage.generateResponse("error", HttpStatus.BAD_REQUEST, "la date de naissance ne peut pas depassé aujourd'dhui");
+            }
+            for (Agents agents : agentsList){
+                agents.getNotification().add(notification1);
+                agentRepository.save(agents);
+            }*/
                 return utilisateurService.demandebyagent(id, structure);
+
         }
 
    /* @PostMapping("/refreshtoken")
@@ -309,7 +329,20 @@ public class UtilisateurController {
     @PostMapping("/valideragent/{id}")
     public String  valadtionbyadmin(@PathVariable Long id){
         Agents a=agentRepo.findById(id).get();
+        System.out.println("////////////////////////////////////" + a);
         utilisateurService.validerinscriptionentantquerole(a.getId());
         return "Agent valider";
+    }
+    @GetMapping("/list")
+    public Object  list(){
+        return userRepository.findAll();
+    }
+    @GetMapping("/getbyid/{id}")
+    public Object  getbyid(@PathVariable  Long id){
+        return userRepository.findById(id).get();
+    }
+    @GetMapping("/listagent")
+    public Object  listagent(){
+      return  agentRepo.findAll();
     }
 }

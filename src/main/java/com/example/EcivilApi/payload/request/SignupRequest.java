@@ -2,9 +2,10 @@ package com.example.EcivilApi.payload.request;
 
 
 import com.example.EcivilApi.models.Genre;
+import lombok.ToString;
 
 import java.util.Set;
-
+@ToString
 public class SignupRequest {
 
     private String username;
@@ -14,7 +15,6 @@ public class SignupRequest {
     private String prenom;
     private String genre;
     private String tel;
-    private  String lieuuderesidence;
     private String statut;
    // @NotBlank
    // @Size(min = 6, max = 40)
@@ -75,13 +75,6 @@ public class SignupRequest {
 
     public void setTel(String tel) {
         this.tel = tel;
-    }
-    public String getLieuuderesidence() {
-        return lieuuderesidence;
-    }
-
-    public void setLieuuderesidence(String lieuuderesidence) {
-        this.lieuuderesidence = lieuuderesidence;
     }
 
     public String getStatut() {

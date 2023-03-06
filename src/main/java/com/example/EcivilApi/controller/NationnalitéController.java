@@ -3,9 +3,7 @@ package com.example.EcivilApi.controller;
 import com.example.EcivilApi.configuration.ResponseMessage;
 import com.example.EcivilApi.configuration.SaveImage;
 import com.example.EcivilApi.models.*;
-import com.example.EcivilApi.repository.NationnaliteRepo;
-import com.example.EcivilApi.repository.Residncerepo;
-import com.example.EcivilApi.repository.UtilisateurRepository;
+import com.example.EcivilApi.repository.*;
 import com.example.EcivilApi.services.Demandeservice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -14,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -28,6 +27,10 @@ public class NationnalitéController {
     UtilisateurRepository utilisateurRepository;
     @Autowired
     Demandeservice demandeservice;
+    @Autowired
+    NotificationRepository notificationRepository;
+    @Autowired
+    AgentRepo agentRepository;
 
 
 
@@ -44,6 +47,15 @@ public class NationnalitéController {
         Nationnalite nationnalite1   =new JsonMapper().readValue(nationnalite,Nationnalite.class);
         // Acten c = actenRepo.findByNumvolet(numvolet);
         Utilisateurs u=utilisateurRepository.findById(utilisateurs.getId()).get();
+        Notification notification=new Notification();
+        notification.setDatenotif(new Date());
+        notification.setDescription(utilisateurs.getPrenom()+" "+utilisateurs.getNom() +"a fait une demande d'acte de Naissance: " );
+        Notification notification1= notificationRepository.save(notification);
+        List<Agents> agentsList =  agentRepository.findByStructure(mastructure);
+        for (Agents agents : agentsList){
+            agents.getNotification().add(notification1);
+            agentRepository.save(agents);
+        }
         //Demande demande1=demandeRepository.findById(demande.getId()).get();
         if (file != null) {
             nationnalite1.setPhotoacten((SaveImage.save("residence",file,nationnalite1.getNom())));
@@ -69,12 +81,12 @@ public class NationnalitéController {
         return nationnaliteRepo.findByMastructure(structure);
     }
 
-    @GetMapping("/listnat")
-    public List<Nationnalite> listnat(){
-        return  nationnaliteRepo.findAll();
+    @GetMapping("/list/{user}")
+    public Object listnat( @PathVariable Utilisateurs user){
+        return  nationnaliteRepo.findByUser(user);
 
     }
-    @GetMapping("/getacte/{acten}")
+    @GetMapping("/getacte/{nationnalite}")
     public Nationnalite getacet(@PathVariable Nationnalite nationnalite){
         return  nationnaliteRepo.findById(nationnalite.getId()).get();
 
