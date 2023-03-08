@@ -27,7 +27,8 @@ public class Actem {
     private Date datemariage;
 
     private String etatdemande;
-
+    @ManyToOne
+    private Demande mademande;
   /*  @JsonIgnore
     @ManyToOne
     private Demande mademande;
@@ -38,9 +39,7 @@ public class Actem {
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Utilisateurs user;*/
 
-    @JsonIgnore
-    @ManyToOne
-    private Demande mademande;
+
 
     @ManyToOne
     private Structure mastructure;

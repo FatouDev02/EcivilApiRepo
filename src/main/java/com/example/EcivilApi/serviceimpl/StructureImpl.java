@@ -92,6 +92,7 @@ ActenRepo actenRepo;
    // @Scheduled(cron = "0 0 8 * * *")
     public Object generateUserPresenceList(Structure structure,Long nbre) {
        // users.clear();
+        var totaluser=0;
         List<Utilisateurs> users = new ArrayList<>();
        //  Acten acten=new Acten();
       //   List<Acten> actenList= new ArrayList<>();
@@ -101,23 +102,29 @@ ActenRepo actenRepo;
                   //  users.clear();
                 if(a.getEtatdemande() != null){
                     users.add(a.getUser());
+                    totaluser = users.size();
+                   //  System.out.println("//////////////////////////////////ok utilisateurs111111"+totaluser);
 
                 }
-                System.out.println("//////////////////////////////////ok utilisateurs111111"+users);
 
 
             }
         List<Utilisateurs> utilisateurs2=new ArrayList<>();
 
+            if(nbre > totaluser){
+                ResponseMessage messages=new ResponseMessage("Veuillez donner un nombre inférieur à  " + totaluser,false);
+              //  System.out.println("//////////////////////////////////ok message" + messages.getContenue());
+                return  messages;
 
-            for(int i=0; i<nbre;i++) {
-                // Envoyer un message de bienvenue à l'utilisateur
-                utilisateurs2.add(users.get(i));
-                // i++;
-                System.out.println("//////////////////////////////////welcome" + i + users.get(i).getUsername());
+            } else{
+                for(int i=0; i<nbre;i++) {
+
+                    utilisateurs2.add(users.get(i));
+
+                }
+                //  mailSender.send(emailConstructor.rdvusers(a.getUser()));
 
             }
-             //  mailSender.send(emailConstructor.rdvusers(a.getUser()));
 
 
         return  utilisateurs2;

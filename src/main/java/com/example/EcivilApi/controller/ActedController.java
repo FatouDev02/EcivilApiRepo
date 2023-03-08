@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +34,8 @@ public class ActedController {
     ActedRepo actedRepo;
     @Autowired
     Demandeservice demandeservice;
-
+    @Autowired
+    Notifrdvuserrepo notifrdvuserrepo;
     //a la creation d'un acte de naissance on donne on donne l'id de la demande or une demande est liéé à,un strucure
     //donc acten est liée a la structure dont la demande est liée
     @PostMapping("/add/{numvolet}/{structure}/{utilisateurs}")
@@ -82,6 +85,23 @@ public class ActedController {
 
     }
 
+
+    @PostMapping("/validationacted/{id}")
+    public  Object  valider(@PathVariable Long id){
+        ActeD acted= actedRepo.findById(id).get();
+        acted.setEtatdemande("Demande Validée");
+        //envoie un message à user
+        Notifrdvuser notifica= new Notifrdvuser();
+        notifica.setDatenotification(new Date());
+        // Date dateLimite = new Date(System.currentTimeMillis() + (2 * 24 * 60 * 60 * 1000));
+        LocalDate dateLimitee = LocalDate.now().plusDays(2);
+        notifica.setNdescription(" Votre demande a été prise en compte veuillez récuperer le document a cette date: " + dateLimitee);
+        Notifrdvuser notificationn= notifrdvuserrepo.save(notifica);
+        acted.getUser().getNotifrdvusers().add(notificationn);
+        return demandeservice.updateacted(id,acted);
+
+    }
+
     @GetMapping("/getacte/{acted}")
     public ActeD getacet(@PathVariable ActeD acted){
         return  actedRepo.findById(acted.getId()).get();
@@ -89,6 +109,21 @@ public class ActedController {
     }
     @GetMapping("/listactedbystruct/{structure}")
     public  Object  allacted(@PathVariable Structure structure ){
+
+        List<ActeD> acteList=actedRepo.findByMastructure(structure);
+        List<ActeD> newact=new ArrayList<>();
+
+        for (ActeD al:acteList){
+            if(al.getEtatdemande()== null){
+                newact.add(al);
+
+            }
+        }
+        return newact;
+        // return actemRepo.findByMastructure(structure);
+        }
+    @GetMapping("/count/{structure}")
+    public  Object  countacted(@PathVariable Structure structure ){
         return actedRepo.findByMastructure(structure);
     }
     ////////////////////////    //////////////////////// valider   ////////////////////////    ////////////////////////

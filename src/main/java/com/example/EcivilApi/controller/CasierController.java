@@ -3,10 +3,7 @@ package com.example.EcivilApi.controller;
 import com.example.EcivilApi.configuration.ResponseMessage;
 import com.example.EcivilApi.configuration.SaveImage;
 import com.example.EcivilApi.models.*;
-import com.example.EcivilApi.repository.AgentRepo;
-import com.example.EcivilApi.repository.CasierRepo;
-import com.example.EcivilApi.repository.NotificationRepository;
-import com.example.EcivilApi.repository.UtilisateurRepository;
+import com.example.EcivilApi.repository.*;
 import com.example.EcivilApi.services.Demandeservice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -15,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,11 +29,31 @@ public class CasierController {
     NotificationRepository notificationRepository;
     @Autowired
     AgentRepo agentRepository;
-
+    @Autowired
+    Notifrdvuserrepo notifrdvuserrepo;
     @Autowired
     UtilisateurRepository utilisateurRepository;
     @Autowired
     Demandeservice demandeservice;
+
+    @PostMapping("/validationcasier/{id}")
+    public  Object  valider(@PathVariable Long id){
+        CasierJudiciaire actem= casierRepo.findById(id).get();
+        actem.setEtatdemande("Demande Validée");
+        //envoie un message à user
+        Notifrdvuser notifica= new Notifrdvuser();
+        notifica.setDatenotification(new Date());
+        // Date dateLimite = new Date(System.currentTimeMillis() + (2 * 24 * 60 * 60 * 1000));
+        LocalDate dateLimitee = LocalDate.now().plusDays(2);
+
+
+        notifica.setNdescription(" Votre demande a été prise en compte veuillez récuperer le document a cette date: " + dateLimitee);
+        Notifrdvuser notificationn= notifrdvuserrepo.save(notifica);
+        actem.getUser().getNotifrdvusers().add(notificationn);
+        return demandeservice.updatecasier(id,actem);
+
+    }
+
     //a la creation d'un acte de naissance on donne on donne l'id de la demande or une demande est liéé à,un strucure
     //donc acten est liée a la structure dont la demande est liée
     @PostMapping("/add/{casstructure}/{utilisateurs}/{lieudenaissance}")
@@ -89,10 +108,25 @@ public class CasierController {
     @GetMapping("/listcasierbystruct/{structure}")
     public  Object  allcas(@PathVariable Structure structure ){
 
+        List<CasierJudiciaire> actenList=casierRepo.findByMastructure(structure);
+        List<CasierJudiciaire> newact=new ArrayList<>();
+
+        for (CasierJudiciaire al:actenList){
+            newact.add(al);
+
+            if(al.getEtatdemande()== null){
+            }
+        }
+        return newact;
+    }
+    @GetMapping("/count/{structure}")
+    public  Object  countcas(@PathVariable Structure structure ){
         return casierRepo.findByMastructure(structure);
     }
-
-
+    @DeleteMapping("/delete/{casier}")
+    public  void  countcas(@PathVariable CasierJudiciaire casier ){
+        casierRepo.deleteById(casier.getId());
+    }
 
 
 

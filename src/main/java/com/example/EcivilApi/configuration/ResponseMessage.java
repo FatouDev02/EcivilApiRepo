@@ -1,18 +1,24 @@
 package com.example.EcivilApi.configuration;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.Map;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ResponseMessage {
-    public ResponseMessage(String message, HttpStatus status) {
-        Map<String, Object> map = new HashMap<String, Object>();
 
-        map.put("message", message);
-        map.put("satus", status.value());
-    }
+    private String contenue;
+    private Boolean status;
+
+
+
+
 
     public static ResponseEntity<Object> generateResponse(String message, HttpStatus status, Object object) {
 
@@ -25,4 +31,5 @@ public class ResponseMessage {
         return new ResponseEntity<Object>(map, status);
 
     }
+
 }

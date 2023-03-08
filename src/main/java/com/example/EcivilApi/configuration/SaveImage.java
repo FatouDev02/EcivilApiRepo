@@ -10,12 +10,12 @@ import java.util.Objects;
 
 public class SaveImage {
 
-    public static String localhost = "/Applications/MAMP/htdocs/esebenw";
+    public static String localhost = "http://localhost:8888//";
     public static String servercasier = localhost + "esebenw/images/casier/";
     public static String serverresidence = localhost + "esebenw/images/residence/";
 
-    public static String residencelocation = "/Applications/MAMP/htdocs/esebenw/images/casier";
-    public static String casierlocation = "/Applications/MAMP/htdocs/esebenw/images/residence";
+    public static String residencelocation = "/Applications/MAMP/htdocs/esebenw/images/residence/";
+    public static String casierlocation = "/Applications/MAMP/htdocs/esebenw/images/casier/";
 
     public static String save(String typeImage, MultipartFile file, String nomFichier) {
         String src = "";

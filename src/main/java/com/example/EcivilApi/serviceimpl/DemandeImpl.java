@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 @Service
@@ -108,9 +109,12 @@ public class DemandeImpl  implements Demandeservice {
     public Object creernationlt(Nationnalite nationnalite,String lieuderesidence,String nomstruct) {
         Structure structure=structureRepository.findByNom(nomstruct);
         if (!nationnalite.getLieuderesidence().equals(structure.getNom())){
-            return ResponseMessage.generateResponse("error", HttpStatus.OK,
-                    " le lieu de residence doit correspondre au lieu de la structure !");
 
+            ResponseMessage message = new ResponseMessage("le lieu de residence doit correspondre au lieu de la structure !",false) ;
+            //ResponseMessage.generateResponse("error", HttpStatus.BAD_REQUEST, " La date de naissance ne peut pas depassé aujourd'dhui");
+            System.out.println("//////////////////////////////////ok message" + message.getContenue());
+
+            return message;
         }else{
             nationnalite.setLieuderesidence(lieuderesidence);
             return nationnaliteRepo.save(nationnalite);
@@ -145,29 +149,38 @@ public class DemandeImpl  implements Demandeservice {
     }
 
     @Override
-    public Actem updateactem(Long id, Actem actem) {
-        return null;
-    }
+    public Object updateactem(Long id, Actem actem) {
+        actem.setId(id);
+        actemRepo.save(actem);
+        return "dzgu";    }
 
     @Override
-    public ActeD updateacted(Long id, ActeD acteD) {
-        return null;
-    }
+    public Object updateacted(Long id, ActeD acteD) {
+
+
+        acteD.setId(id);
+        actedRepo.save(acteD);
+        return "dzgu";    }
 
     @Override
-    public CasierJudiciaire updatecasier(Long id, CasierJudiciaire casierJudiciaire) {
-        return null;
-    }
+    public Object updatecasier(Long id, CasierJudiciaire casierJudiciaire) {
+
+        casierJudiciaire.setId(id);
+        casierRepo.save(casierJudiciaire);
+        return "dzgu";    }
 
     @Override
-    public Residence updateresidence(Long id, Residence residence) {
-        return null;
-    }
+    public Object updateresidence(Long id, Residence residence) {
+
+        residence.setId(id);
+        residncerepo.save(residence);
+        return "dzgu";    }
 
     @Override
-    public Nationnalite updatenationlt(Long id, Nationnalite nationnalite) {
-        return null;
-    }
+    public Object updatenationlt(Long id, Nationnalite nationnalite) {
+        nationnalite.setId(id);
+        nationnaliteRepo.save(nationnalite);
+        return "dzgu";    }
 
     @Override
     public Object getAll() {
@@ -258,4 +271,150 @@ public class DemandeImpl  implements Demandeservice {
     public Demande findbytype(String type) {
         return demandeRepository.findByType(type);
     }
+
+
+    @Override
+    public Object generateUserPresenceactem(Structure structure, Long nbre) {
+
+        // users.clear();
+        var totaluser=0;
+
+        List<Utilisateurs> users = new ArrayList<>();
+
+        for(Actem a: actemRepo.findAllByMastructure(structure)){
+
+            if(a.getEtatdemande() != null){
+                users.add(a.getUser());
+                totaluser = users.size();
+
+            }
+        }
+        List<Utilisateurs> utilisateurs2=new ArrayList<>();
+        if(nbre > totaluser){
+            ResponseMessage messages=new ResponseMessage("Veuillez donner un nombre inférieur à  " + totaluser,false);
+            //  System.out.println("//////////////////////////////////ok message" + messages.getContenue());
+            return  messages;
+
+        } else {
+            for (int i = 0; i < nbre; i++) {
+                utilisateurs2.add(users.get(i));
+            }
+        }
+        return  utilisateurs2;
+    }
+
+    @Override
+    public Object generateUserPresenceacted(Structure structure, Long nbre) {
+        // users.clear();
+        var totaluser=0;
+
+        List<Utilisateurs> users = new ArrayList<>();
+
+        for(ActeD a: actedRepo.findByMastructure(structure)){
+
+            if(a.getEtatdemande() != null){
+                users.add(a.getUser());
+                totaluser = users.size();
+
+            }
+        }
+        List<Utilisateurs> utilisateurs2=new ArrayList<>();
+        if(nbre > totaluser){
+            ResponseMessage messages=new ResponseMessage("Veuillez donner un nombre inférieur à  " + totaluser,false);
+            //  System.out.println("//////////////////////////////////ok message" + messages.getContenue());
+            return  messages;
+
+        } else {
+            for (int i = 0; i < nbre; i++) {
+                utilisateurs2.add(users.get(i));
+            }
+        }
+        return  utilisateurs2;
+    }
+
+    @Override
+    public Object generateUserPresenceactres(Structure structure, Long nbre) {
+        var totaluser=0;
+
+        // users.clear();
+        List<Utilisateurs> users = new ArrayList<>();
+
+        for(Residence a: residncerepo.findByMastructure(structure)){
+
+            if(a.getEtatdemande() != null){
+                users.add(a.getUser());
+                totaluser = users.size();
+
+            }
+        }
+        List<Utilisateurs> utilisateurs2=new ArrayList<>();
+        if(nbre > totaluser){
+            ResponseMessage messages=new ResponseMessage("Veuillez donner un nombre inférieur à  " + totaluser,false);
+            //  System.out.println("//////////////////////////////////ok message" + messages.getContenue());
+            return  messages;
+
+        } else {
+            for (int i = 0; i < nbre; i++) {
+                utilisateurs2.add(users.get(i));
+            }
+        }
+        return  utilisateurs2;
+    }
+
+    @Override
+    public Object generateUserPresenceactnat(Structure structure, Long nbre) {
+        var totaluser=0;
+
+        // users.clear();
+        List<Utilisateurs> users = new ArrayList<>();
+
+        for(Nationnalite a: nationnaliteRepo.findByMastructure(structure)){
+
+            if(a.getEtatdemande() != null){
+                users.add(a.getUser());
+                totaluser = users.size();
+
+            }
+        }
+        List<Utilisateurs> utilisateurs2=new ArrayList<>();
+        if(nbre > totaluser){
+            ResponseMessage messages=new ResponseMessage("Veuillez donner un nombre inférieur à  " + totaluser,false);
+            //  System.out.println("//////////////////////////////////ok message" + messages.getContenue());
+            return  messages;
+
+        } else {
+            for (int i = 0; i < nbre; i++) {
+                utilisateurs2.add(users.get(i));
+            }
+        }
+        return  utilisateurs2;
+    }
+
+    @Override
+    public Object generateUserPresenceactcas(Structure structure, Long nbre) {
+        // users.clear();
+        var totaluser=0;
+
+        List<Utilisateurs> users = new ArrayList<>();
+
+        for(CasierJudiciaire a: casierRepo.findByMastructure(structure)){
+
+            if(a.getEtatdemande() != null){
+                users.add(a.getUser());
+                totaluser = users.size();
+
+            }
+        }
+        List<Utilisateurs> utilisateurs2=new ArrayList<>();
+        if(nbre > totaluser){
+            ResponseMessage messages=new ResponseMessage("Veuillez donner un nombre inférieur à  " + totaluser,false);
+            //  System.out.println("//////////////////////////////////ok message" + messages.getContenue());
+            return  messages;
+
+        } else {
+            for (int i = 0; i < nbre; i++) {
+                utilisateurs2.add(users.get(i));
+            }
+        }
+        return  utilisateurs2;    }
 }

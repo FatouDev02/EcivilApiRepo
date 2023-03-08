@@ -12,6 +12,7 @@ public interface ActemRepo extends JpaRepository<Actem,Long> {
     List<Actem> findByMastructure(Structure mastructure);
 
     List<Actem> findByUser(Utilisateurs user);
+    List<Actem> findAllByMastructure(Structure mastructure);
 
 
 }

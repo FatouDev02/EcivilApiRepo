@@ -3,6 +3,7 @@ package com.example.EcivilApi.controller;
 
 import com.example.EcivilApi.models.*;
 import com.example.EcivilApi.repository.*;
+import com.example.EcivilApi.services.Demandeservice;
 import com.example.EcivilApi.services.StructureService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -24,6 +25,8 @@ public class StructureController {
     Typestructrepo typestructrepo;
 @Autowired
     DemandeRepository demandeRepository;
+@Autowired
+    Demandeservice demandeservice;
 @Autowired
     AgentRepo agentRepo;
 @Autowired
@@ -191,6 +194,32 @@ public class StructureController {
 
         return structureService.generateUserPresenceList(structure,number);
     }
+    @GetMapping("/rdvactem/{structure}/{number}")
+    public Object rdvactem(@PathVariable  Structure structure,@PathVariable Long number){
+
+        return demandeservice.generateUserPresenceactem(structure,number);
+    }
+    @GetMapping("/rdvacted/{structure}/{number}")
+    public Object rdvacted(@PathVariable  Structure structure,@PathVariable Long number){
+
+        return  demandeservice.generateUserPresenceacted(structure,number);
+    }
+    @GetMapping("/rdvcas/{structure}/{number}")
+    public Object rdvcas(@PathVariable  Structure structure,@PathVariable Long number){
+
+        return  demandeservice.generateUserPresenceactcas(structure,number);
+    }
+    @GetMapping("/rdvres/{structure}/{number}")
+    public Object rdvres(@PathVariable  Structure structure,@PathVariable Long number){
+
+        return demandeservice.generateUserPresenceactres(structure,number);
+    }
+    @GetMapping("/rdvnat/{structure}/{number}")
+    public Object rdvnat(@PathVariable  Structure structure,@PathVariable Long number){
+
+        return  demandeservice.generateUserPresenceactnat(structure,number);
+    }
+
 
     @GetMapping("/getbyagent/{agents}")
     public Structure findByAgents(@PathVariable Agents agents){

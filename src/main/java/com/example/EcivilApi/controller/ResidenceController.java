@@ -3,10 +3,7 @@ package com.example.EcivilApi.controller;
 import com.example.EcivilApi.configuration.ResponseMessage;
 import com.example.EcivilApi.configuration.SaveImage;
 import com.example.EcivilApi.models.*;
-import com.example.EcivilApi.repository.AgentRepo;
-import com.example.EcivilApi.repository.NotificationRepository;
-import com.example.EcivilApi.repository.Residncerepo;
-import com.example.EcivilApi.repository.UtilisateurRepository;
+import com.example.EcivilApi.repository.*;
 import com.example.EcivilApi.services.Demandeservice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -15,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,12 +30,30 @@ public class ResidenceController {
     NotificationRepository notificationRepository;
     @Autowired
     AgentRepo agentRepository;
-
+    @Autowired
+    Notifrdvuserrepo notifrdvuserrepo;
     @Autowired
     UtilisateurRepository utilisateurRepository;
     @Autowired
     Demandeservice demandeservice;
 
+    @PostMapping("/validationres/{id}")
+    public  Object  valider(@PathVariable Long id){
+        Residence actem= residncerepo.findById(id).get();
+        actem.setEtatdemande("Demande Validée");
+        //envoie un message à user
+        Notifrdvuser notifica= new Notifrdvuser();
+        notifica.setDatenotification(new Date());
+        // Date dateLimite = new Date(System.currentTimeMillis() + (2 * 24 * 60 * 60 * 1000));
+        LocalDate dateLimitee = LocalDate.now().plusDays(2);
+
+
+        notifica.setNdescription(" Votre demande a été prise en compte veuillez récuperer le document a cette date: " + dateLimitee);
+        Notifrdvuser notificationn= notifrdvuserrepo.save(notifica);
+        actem.getUser().getNotifrdvusers().add(notificationn);
+        return demandeservice.updateresidence(id,actem);
+
+    }
     @PostMapping("/add/{resstructure}/{utilisateurs}/{lieuderesidence}")
     public Object createresidence(
 
@@ -84,9 +101,21 @@ public class ResidenceController {
 
     @GetMapping("/listresbystruct/{structure}")
     public  Object  allres(@PathVariable Structure structure ){
+        List<Residence> actenList=residncerepo.findByMastructure(structure);
+        List<Residence> newact=new ArrayList<>();
+
+        for (Residence al:actenList){
+
+            if(al.getEtatdemande()== null){
+                newact.add(al);
+
+            }
+        }
+        return newact;    }
+    @GetMapping("/count/{structure}")
+    public  Object  countres(@PathVariable Structure structure ){
         return residncerepo.findByMastructure(structure);
     }
-
     @GetMapping("/list/{user}")
     public Object listres( @PathVariable Utilisateurs user){
         return  residncerepo.findByUser(user);

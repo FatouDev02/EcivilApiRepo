@@ -58,9 +58,15 @@ public class ActenController {
         if(acten1.getDatedenaissance().after(new Date())){
             System.out.println("//////////////////////////////////////"+ acten1.getDatedenaissance());
 
-            ResponseMessage message = new ResponseMessage("La date de naissance ne peut pas depassé aujourd'dhui",HttpStatus.BAD_REQUEST) ;
+            ResponseMessage message = new ResponseMessage("La date de naissance ne peut pas depassé aujourd'dhui",false) ;
             //ResponseMessage.generateResponse("error", HttpStatus.BAD_REQUEST, " La date de naissance ne peut pas depassé aujourd'dhui");
+             System.out.println("//////////////////////////////////ok message" + message.getContenue());
+
             return message;
+            /*
+            ResponseMessage messages=new ResponseMessage("Veuillez donner un nombre inférieur à  " + totaluser,false);
+            //  System.out.println("//////////////////////////////////ok message" + messages.getContenue());
+            return  messages;*/
         }
         for (Agents agents : agentsList){
             agents.getNotification().add(notification1);
@@ -73,8 +79,9 @@ public class ActenController {
 
 
         if (c != null ){
-            return ResponseMessage.generateResponse("error", HttpStatus.OK, "problemenumvolet");
-        }else if(u == null){
+            return ResponseMessage.generateResponse("Le numero de volet existe déjà", HttpStatus.OK, "error");
+        }
+        else if(u == null){
             return ResponseMessage.generateResponse("error", HttpStatus.OK, "user problemme");
 
         }
@@ -83,7 +90,6 @@ public class ActenController {
             //acten1.setMademande(demande);
 
             acten1.setMastructure(structure);
-
             acten1.setUser(u);
 
             return demandeservice.creeracten(acten1,acten1.getNumvolet());
@@ -252,16 +258,9 @@ public class ActenController {
     }
     @PostMapping("/validation/{id}")
     public  Object  valider(@PathVariable Long id){
-        /*Acten acten= actenRepo.findById(id).get();
-        if(acten1.getEtatdemande()== null || acten1.getEtatdemande().trim().isEmpty() ) {
-            acten.setEtatdemande(acten.getEtatdemande());
-        }else {
-            acten.setEtatdemande("Demande Validée");
-        }
-        return demandeservice.updateacten(id,acten);*/
+
         Acten acten= actenRepo.findById(id).get();
         acten.setEtatdemande("Demande Validée");
-        //envoie un message à user
         Notifrdvuser notifica= new Notifrdvuser();
         notifica.setDatenotification(new Date());
         // Date dateLimite = new Date(System.currentTimeMillis() + (2 * 24 * 60 * 60 * 1000));
@@ -283,11 +282,17 @@ public class ActenController {
         List<Acten> newact=new ArrayList<>();
 
         for (Acten al:actenList){
-            if(al.getEtatdemande()==null){
-               newact.add(al);
+
+            if(al.getEtatdemande()== null){
+                newact.add(al);
+
             }
         }
                 return newact;
+    }
+    @GetMapping("/count/{structure}")
+    public  Object  countacten(@PathVariable Structure structure ){
+        return actenRepo.findByMastructure(structure);
     }
 
     @GetMapping("/list/{user}")

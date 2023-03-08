@@ -116,7 +116,7 @@ public class UtilisateurImpl implements UtilisateurService {
         String mat = a.getNom().substring(0, 1) + a.getPrenom().substring(0, 1)
                 + "@sebenw2022";
         a.setMatricule(mat);
-        a.setStatut("AgentValider");
+        a.setStatut("AgentValide");
         agentRepo.save(a);
         mailSender.send(emailConstructor.valideagent(a,a.getStructure()));
 

@@ -29,8 +29,6 @@ public class Acten {
     private String lieudenaissance;
     private String genre;
     private String etatdemande;
-
-@JsonIgnore
     @ManyToOne
     private Demande mademande;
 

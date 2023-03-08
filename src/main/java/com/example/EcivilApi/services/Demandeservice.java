@@ -22,11 +22,11 @@ public interface Demandeservice {
     // Mise à jour
     Demande update(Long id, Utilisateurs personne);
     Object updateacten(Long id,Acten acten);
-    Actem updateactem(Long id,Actem actem);
-    ActeD updateacted(Long id,ActeD acteD);
-    CasierJudiciaire updatecasier(Long id,CasierJudiciaire casierJudiciaire);
-    Residence updateresidence(Long id,Residence residence);
-    Nationnalite updatenationlt(Long id,Nationnalite nationnalite);
+    Object updateactem(Long id,Actem actem);
+    Object updateacted(Long id,ActeD acteD);
+    Object updatecasier(Long id,CasierJudiciaire casierJudiciaire);
+    Object updateresidence(Long id,Residence residence);
+    Object updatenationlt(Long id,Nationnalite nationnalite);
 
     // recuperer l'ensemble des personnes
     Object getAll();
@@ -46,6 +46,14 @@ public interface Demandeservice {
     Nationnalite GetNationnaliteById(Long id);
     String attribuerstruct(long iddem, long idstruct);
     Demande findbytype(String type);
+    // listes de présence
+    Object generateUserPresenceactem(Structure structure,Long nbre);
+    Object generateUserPresenceacted(Structure structure,Long nbre);
+    Object generateUserPresenceactres(Structure structure,Long nbre);
+    Object generateUserPresenceactnat(Structure structure,Long nbre);
+    Object generateUserPresenceactcas(Structure structure,Long nbre);
+
+
 
 
 
